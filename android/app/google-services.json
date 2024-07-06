@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "64959225182",
+    "project_id": "nomad-coder-moodtracker",
+    "storage_bucket": "nomad-coder-moodtracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64959225182:android:3db19b4cc9072e989bc3cf",
+        "android_client_info": {
+          "package_name": "com.example.flutter_senior_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyxuJs2dBQT7F12f4GDdE5iC6N4yGHPCw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
