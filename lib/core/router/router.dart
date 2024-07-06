@@ -1,4 +1,4 @@
-import 'package:flutter_senior_project/core/route_names.dart';
+import 'package:flutter_senior_project/core/router/route_names.dart';
 import 'package:flutter_senior_project/features/authentication/signup_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
