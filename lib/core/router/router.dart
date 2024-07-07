@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_senior_project/core/router/route_names.dart';
 import 'package:flutter_senior_project/features/authentication/view/signin_screen.dart';
-import 'package:flutter_senior_project/features/home/home_screen.dart';
 import 'package:flutter_senior_project/features/splash/splash_screen.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_senior_project/features/home/home_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 final routerProvider = Provider<GoRouter>(
   (ref) => GoRouter(
@@ -12,17 +13,32 @@ final routerProvider = Provider<GoRouter>(
       GoRoute(
         name: RouteNames.logoSplash,
         path: RouteNames.logoSplashUrl,
-        builder: (context, state) => const SplashScreen(),
+        pageBuilder: (context, state) => MaterialPage(
+          key: state.pageKey,
+          child: const SplashScreen(),
+        ),
       ),
       GoRoute(
         name: RouteNames.home,
         path: RouteNames.homeUrl,
-        builder: (context, state) => const HomeScreen(),
+        pageBuilder: (context, state) => MaterialPage(
+          key: state.pageKey,
+          child: const HomeScreen(),
+        ),
       ),
       GoRoute(
         name: RouteNames.signIn,
         path: RouteNames.signInUrl,
-        builder: (context, state) => const SigninScreen(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const SigninScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        ),
       ),
     ],
   ),

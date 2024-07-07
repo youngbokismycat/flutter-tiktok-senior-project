@@ -1,80 +1,80 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_senior_project/core/router/route_names.dart';
-
-import 'package:flutter_senior_project/core/utils/is_dark_mode.dart';
+import 'package:flutter_senior_project/core/utils/is_dark_mode.dart'; // Import the is_dark_mode utility
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class SplashScreen extends StatefulHookConsumerWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _SplashScreenState();
+  _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends ConsumerState<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen>
+    with TickerProviderStateMixin {
+  late final AnimationController _animationController;
+  late final Animation<Color?> _colorAnimation;
+  late final ColorTween _colorTween;
+  double _opacity = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+    _colorTween = ColorTween(
+        begin: FlexColor.aquaBlueDarkPrimary,
+        end: FlexColor.redWineDarkPrimary);
+    _colorAnimation = _colorTween.animate(_animationController);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startAnimations();
+    });
+  }
+
+  void _startAnimations() {
+    Future.delayed(const Duration(milliseconds: 100), () {
+      setState(() {
+        _opacity = 1.0;
+      });
+    });
+
+    Future.delayed(const Duration(milliseconds: 500), () {
+      _animationController.forward();
+    });
+
+    Future.delayed(const Duration(milliseconds: 2000), () {
+      setState(() {
+        _opacity = 0.0;
+      });
+      Future.delayed(const Duration(milliseconds: 500), () {
+        context.go(RouteNames.signInUrl);
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final opacity = useState(0.0);
-    final animationController =
-        useAnimationController(duration: const Duration(milliseconds: 500));
-    final colorTween = useMemoized(
-        () => ColorTween(
-            begin: FlexColor.blueDarkPrimary,
-            end: FlexColor.redWineDarkPrimary),
-        [ref]);
-    final colorAnimation = colorTween.animate(animationController);
-
-    useEffect(() {
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness:
-            isDarkMode(ref) ? Brightness.light : Brightness.dark,
-        systemNavigationBarColor: Colors.transparent,
-        systemNavigationBarIconBrightness:
-            isDarkMode(ref) ? Brightness.light : Brightness.dark,
-      ));
-
-      Future.delayed(const Duration(milliseconds: 100), () {
-        opacity.value = 1.0;
-      });
-
-      Future.delayed(const Duration(milliseconds: 500), () {
-        animationController.forward();
-      });
-
-      final timer = Future.delayed(const Duration(milliseconds: 2000), () {
-        opacity.value = 0.0;
-        Future.delayed(const Duration(milliseconds: 500), () {
-          context.go(RouteNames.signInUrl);
-        });
-      });
-
-      return () {
-        SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-          statusBarColor: null,
-          statusBarIconBrightness: null,
-          systemNavigationBarColor: null,
-          systemNavigationBarIconBrightness: null,
-        ));
-        timer.ignore();
-      };
-    }, [animationController]);
-
     return Scaffold(
       body: Center(
         child: AnimatedOpacity(
-          opacity: opacity.value,
+          opacity: _opacity,
           duration: const Duration(milliseconds: 500),
           child: AnimatedBuilder(
-            animation: colorAnimation,
+            animation: _colorAnimation,
             builder: (context, child) {
               return ShaderMask(
                 shaderCallback: (bounds) => LinearGradient(
-                  colors: [Colors.blue, colorAnimation.value!],
+                  colors: [Colors.blue, _colorAnimation.value!],
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                 ).createShader(bounds),
