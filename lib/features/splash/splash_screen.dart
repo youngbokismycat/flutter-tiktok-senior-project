@@ -20,7 +20,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         useAnimationController(duration: const Duration(milliseconds: 500));
     final colorTween = useMemoized(
         () => ColorTween(
-            begin: FlexColor.aquaBlueLightPrimary,
+            begin: FlexColor.dashBlueDarkPrimary,
             end: FlexColor.redWineDarkPrimary),
         []);
     final colorAnimation = colorTween.animate(animationController);
@@ -37,7 +37,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       final timer = Future.delayed(const Duration(milliseconds: 2000), () {
         opacity.value = 0.0;
         Future.delayed(const Duration(milliseconds: 500), () {
-          context.go(RouteNames.signUpUrl);
+          context.go(RouteNames.signInUrl);
         });
       });
 

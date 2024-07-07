@@ -1,13 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_senior_project/core/router/route_names.dart';
-import 'package:flutter_senior_project/features/authentication/signup_screen.dart';
+import 'package:flutter_senior_project/features/home/home_screen.dart';
+
 import 'package:flutter_senior_project/features/splash/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final routerProvider = Provider(
+final routerProvider = Provider<GoRouter>(
   (ref) => GoRouter(
-    initialLocation: RouteNames.logoSplashUrl,
+    initialLocation: RouteNames.signInUrl,
     routes: [
       GoRoute(
         name: RouteNames.logoSplash,
@@ -15,25 +18,33 @@ final routerProvider = Provider(
         builder: (context, state) => const SplashScreen(),
       ),
       GoRoute(
-        name: RouteNames.signUp,
-        path: RouteNames.signUpUrl,
-        pageBuilder: (context, state) {
-          return CustomTransitionPage(
-            transitionDuration: const Duration(
-              milliseconds: 250,
-            ),
-            key: state.pageKey,
-            child: const SignupScreen(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              return FadeTransition(
-                opacity: animation,
-                child: child,
-              );
-            },
-          );
-        },
-      )
+        name: RouteNames.home,
+        path: RouteNames.homeUrl,
+        builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.signIn,
+        path: RouteNames.signInUrl,
+        builder: (context, state) => const SignInScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.verifyEmail,
+        path: RouteNames.verifyEmailUrl,
+        builder: (context, state) => const EmailVerificationScreen(),
+      ),
     ],
+    redirect: (context, state) {
+      final isLoggedIn = FirebaseAuth.instance.currentUser != null;
+      final isLoggingIn = state.matchedLocation == RouteNames.signInUrl ||
+          state.matchedLocation == RouteNames.signUpUrl;
+
+      if (!isLoggedIn && !isLoggingIn) {
+        return RouteNames.logoSplashUrl;
+      } else if (isLoggedIn &&
+          (isLoggingIn || state.matchedLocation == RouteNames.logoSplashUrl)) {
+        return RouteNames.homeUrl;
+      }
+      return null;
+    },
   ),
 );

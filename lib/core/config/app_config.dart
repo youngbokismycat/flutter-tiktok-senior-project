@@ -18,7 +18,7 @@ abstract class AppConfig {
     brightness: Brightness.dark,
   );
 
-  static const FlexScheme scheme = FlexScheme.sakura;
+  static const FlexScheme scheme = FlexScheme.flutterDash;
   static const bool useScheme = true;
   static const double appBarElevation = 0;
   static const double appBarOpacity = 1;
