@@ -14,6 +14,9 @@ class SignupScreen extends ConsumerWidget {
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
+      body: const Column(
+        children: [Text('hi')],
+      ),
     );
   }
 }
