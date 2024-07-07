@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 abstract class AppConfig {
   static FlexSchemeColor schemeLight = FlexSchemeColor.from(
@@ -17,10 +18,10 @@ abstract class AppConfig {
     brightness: Brightness.dark,
   );
 
-  static const FlexScheme scheme = FlexScheme.flutterDash;
+  static const FlexScheme scheme = FlexScheme.sakura;
   static const bool useScheme = true;
-  static const double appBarElevation = 0.5;
-  static const double appBarOpacity = 0.94;
+  static const double appBarElevation = 0;
+  static const double appBarOpacity = 1;
   static const bool computeDarkTheme = false;
   static const int toDarkLevel = 30;
   static const bool swapColors = false;
@@ -41,11 +42,7 @@ abstract class AppConfig {
   static final FlexTones flexTonesLight = FlexTones.material(Brightness.light);
   static final FlexTones flexTonesDark = FlexTones.material(Brightness.dark);
 
-  static const TextTheme textTheme = TextTheme(
-    displayMedium: TextStyle(fontSize: 41),
-    displaySmall: TextStyle(fontSize: 36),
-    labelSmall: TextStyle(fontSize: 11, letterSpacing: 0.5),
-  );
+  static TextTheme textTheme = GoogleFonts.juaTextTheme();
 
   static const FlexSurfaceMode surfaceMode =
       FlexSurfaceMode.highBackgroundLowScaffold;

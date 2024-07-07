@@ -9,8 +9,9 @@ class SignupScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
-          'Sign up',
+        title: Text(
+          '로그인',
+          style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
     );

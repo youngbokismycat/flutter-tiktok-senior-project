@@ -1,5 +1,4 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_senior_project/core/config/app_config.dart';
 import 'package:flutter_senior_project/core/router/router.dart';
@@ -7,31 +6,31 @@ import 'package:flutter_senior_project/core/theme/brand_theme.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() => runApp(
-      ProviderScope(
+      const ProviderScope(
         child: MyApp(),
       ),
     );
 
 class MyApp extends ConsumerWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
 
-  ThemeMode themeMode = ThemeMode.system;
+  final ThemeMode themeMode = ThemeMode.system;
 
-  bool useMaterial3 = true;
+  final bool useMaterial3 = true;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
       routerConfig: ref.watch(routerProvider),
       debugShowCheckedModeBanner: false,
-      title: 'Hot Reload Playground',
+      title: '물들다 : The Mood Changer',
       theme: FlexThemeData.light(
         useMaterial3: useMaterial3,
         colors: AppConfig.useScheme ? null : AppConfig.schemeLight,
         scheme: AppConfig.scheme,
         swapColors: AppConfig.swapColors,
         usedColors: AppConfig.usedColors,
-        lightIsWhite: false,
+        lightIsWhite: true,
         appBarStyle: null,
         appBarElevation: AppConfig.appBarElevation,
         appBarOpacity: AppConfig.appBarOpacity,
@@ -65,6 +64,9 @@ class MyApp extends ConsumerWidget {
         swapColors: AppConfig.swapColors,
         usedColors: AppConfig.usedColors,
         darkIsTrueBlack: false,
+        appBarBackground: const Color(0xFF121212),
+        scaffoldBackground: const Color(0xFF121212),
+        background: const Color(0xFF121212),
         appBarStyle: null,
         appBarElevation: AppConfig.appBarElevation,
         appBarOpacity: AppConfig.appBarOpacity,
