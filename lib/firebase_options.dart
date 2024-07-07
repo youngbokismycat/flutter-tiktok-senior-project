@@ -79,4 +79,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'nomad-coder-moodtracker.appspot.com',
     measurementId: 'G-X88EP4N0HR',
   );
+
 }
