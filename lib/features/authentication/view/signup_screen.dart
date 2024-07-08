@@ -2,6 +2,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_senior_project/core/router/route_names.dart';
+import 'package:flutter_senior_project/core/utils/transition_animation.dart';
 import 'package:flutter_senior_project/features/authentication/view/widget/custom_login_button.dart';
 import 'package:flutter_senior_project/features/authentication/vm/auth_vm.dart';
 import 'package:flutter_senior_project/features/common/widget/auth_text_form_field.dart';
@@ -22,7 +23,7 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authViewModelProvider);
-
+    final opacity = useState(1.0);
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
     final passwordConfirmController = useTextEditingController();
@@ -41,132 +42,137 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
         isLoading.value = true;
 
         await ref.read(authViewModelProvider.notifier).signUp(
-              emailController.text,
-              passwordController.text,
-              context,
-            );
+            emailController.text, passwordController.text, context, opacity);
         isLoading.value = false;
       }
     }
 
     void onSigninTap(BuildContext context) {
-      context.pop();
+      transitionAnimationPop(context: context, opacity: opacity);
     }
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: FadeTransition(
-          opacity: animationController,
-          child: DefaultPadding(
-            child: Form(
-              key: formKey.value,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: ShaderMask(
-                        shaderCallback: (bounds) =>
-                            gradient.createShader(bounds),
-                        child: const Text(
-                          '물들다',
-                          style: TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 2,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'SIGNUP',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        const Gap(5),
-                        CustomTextFormField(
-                          controller: emailController,
-                          labelText: '이메일',
-                          validator: (value) {
-                            final emailRegExp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                            if (value == null ||
-                                value.isEmpty ||
-                                !emailRegExp.hasMatch(value)) {
-                              return '유효한 이메일을 입력해주세요.';
-                            }
-                            return null;
-                          },
-                        ),
-                        const Gap(10),
-                        CustomTextFormField(
-                          controller: passwordController,
-                          labelText: '비밀번호',
-                          obscureText: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return '비밀번호를 입력해주세요.';
-                            } else if (value.length < 8 || value.length > 20) {
-                              return '비밀번호는 8자 이상 20자 이하이어야 합니다.';
-                            }
-                            return null;
-                          },
-                        ),
-                        const Gap(10),
-                        CustomTextFormField(
-                          controller: passwordConfirmController,
-                          labelText: '비밀번호 확인',
-                          obscureText: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return '비밀번호 확인을 입력해주세요.';
-                            } else if (value != passwordController.text) {
-                              return '비밀번호가 일치하지 않습니다.';
-                            }
-                            return null;
-                          },
-                        ),
-                        const Gap(20),
-                        ValueListenableBuilder<bool>(
-                          valueListenable: isLoading,
-                          builder: (context, loading, child) =>
-                              CustomLoginButton(
-                            text: '회원가입',
-                            textColor: Colors.white,
-                            onPressed: () =>
-                                signUp(formKey.value, isLoading, context),
-                            isLoading: isLoading.value,
-                          ),
-                        ),
-                        const Gap(5),
-                        const Opacity(
-                          opacity: 0.5,
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: Text(
-                              '이메일이 없으신가요?',
+      body: AnimatedOpacity(
+        opacity: opacity.value,
+        duration: const Duration(
+          milliseconds: 300,
+        ),
+        child: SafeArea(
+          child: FadeTransition(
+            opacity: animationController,
+            child: DefaultPadding(
+              child: Form(
+                key: formKey.value,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: ShaderMask(
+                          shaderCallback: (bounds) =>
+                              gradient.createShader(bounds),
+                          child: const Text(
+                            '물들다',
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.white,
                             ),
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => onSigninTap(context),
-                      child: const Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Text(
-                          '계정이 이미 있다면?',
+                    Flexible(
+                      flex: 2,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'SIGNUP',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          const Gap(5),
+                          CustomTextFormField(
+                            controller: emailController,
+                            labelText: '이메일',
+                            validator: (value) {
+                              final emailRegExp =
+                                  RegExp(r'^[^@]+@[^@]+\.[^@]+');
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  !emailRegExp.hasMatch(value)) {
+                                return '유효한 이메일을 입력해주세요.';
+                              }
+                              return null;
+                            },
+                          ),
+                          const Gap(10),
+                          CustomTextFormField(
+                            controller: passwordController,
+                            labelText: '비밀번호',
+                            obscureText: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return '비밀번호를 입력해주세요.';
+                              } else if (value.length < 8 ||
+                                  value.length > 20) {
+                                return '비밀번호는 8자 이상 20자 이하이어야 합니다.';
+                              }
+                              return null;
+                            },
+                          ),
+                          const Gap(10),
+                          CustomTextFormField(
+                            controller: passwordConfirmController,
+                            labelText: '비밀번호 확인',
+                            obscureText: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return '비밀번호 확인을 입력해주세요.';
+                              } else if (value != passwordController.text) {
+                                return '비밀번호가 일치하지 않습니다.';
+                              }
+                              return null;
+                            },
+                          ),
+                          const Gap(20),
+                          ValueListenableBuilder<bool>(
+                            valueListenable: isLoading,
+                            builder: (context, loading, child) =>
+                                CustomLoginButton(
+                              text: '회원가입',
+                              textColor: Colors.white,
+                              onPressed: () =>
+                                  signUp(formKey.value, isLoading, context),
+                              isLoading: isLoading.value,
+                            ),
+                          ),
+                          const Gap(5),
+                          const Opacity(
+                            opacity: 0.5,
+                            child: Align(
+                              alignment: Alignment.topRight,
+                              child: Text(
+                                '이메일이 없으신가요?',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => onSigninTap(context),
+                        child: const Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Text(
+                            '계정이 이미 있다면?',
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

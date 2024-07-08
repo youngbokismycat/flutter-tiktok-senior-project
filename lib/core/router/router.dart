@@ -16,59 +16,60 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: RouteNames.logoSplash,
           path: RouteNames.logoSplashUrl,
-          pageBuilder: (context, state) {
-            return MaterialPage(
-              key: state.pageKey,
-              child: SplashScreen(action: state.extra as String?),
-            );
-          },
+          pageBuilder: (context, state) => transitionPage(
+            state,
+            SplashScreen(action: state.extra as String?),
+          ),
         ),
         GoRoute(
           name: RouteNames.signIn,
           path: RouteNames.signInUrl,
-          pageBuilder: (context, state) => CustomTransitionPage(
-            key: state.pageKey,
-            child: const SigninScreen(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              return FadeTransition(
-                opacity: animation,
-                child: child,
-              );
-            },
+          pageBuilder: (context, state) => transitionPage(
+            state,
+            const SigninScreen(),
           ),
         ),
         GoRoute(
           path: RouteNames.signUpUrl,
           name: RouteNames.signUp,
-          builder: (context, state) => const SignupScreen(),
+          pageBuilder: (context, state) => transitionPage(
+            state,
+            const SignupScreen(),
+          ),
         ),
         GoRoute(
           name: RouteNames.onboarding,
           path: RouteNames.onboardingUrl,
-          pageBuilder: (context, state) {
-            return CustomTransitionPage(
-              key: state.pageKey,
-              child: const OnboardingScreen(),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                return FadeTransition(
-                  opacity: animation,
-                  child: child,
-                );
-              },
-            );
-          },
+          pageBuilder: (context, state) => transitionPage(
+            state,
+            const OnboardingScreen(),
+          ),
         ),
         GoRoute(
           name: RouteNames.home,
           path: RouteNames.homeUrl,
-          pageBuilder: (context, state) => MaterialPage(
-            key: state.pageKey,
-            child: const HomeScreen(),
-          ),
+          pageBuilder: (context, state) =>
+              transitionPage(state, const HomeScreen()),
         ),
       ],
     );
   },
 );
+
+CustomTransitionPage<dynamic> transitionPage(
+  GoRouterState state,
+  Widget child,
+) {
+  return CustomTransitionPage(
+    transitionDuration: const Duration(milliseconds: 500),
+    reverseTransitionDuration: const Duration(milliseconds: 500),
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(
+        opacity: animation,
+        child: child,
+      );
+    },
+  );
+}
