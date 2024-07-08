@@ -24,7 +24,7 @@ class AuthViewModel extends StateNotifier<AsyncValue<User?>> {
     if (state.hasError) {
       showFirebaseErrorSnack(context, state.error);
     } else {
-      context.goNamed(RouteNames.onboarding);
+      context.goNamed(RouteNames.logoSplash, extra: 'signUp');
     }
   }
 
@@ -37,7 +37,7 @@ class AuthViewModel extends StateNotifier<AsyncValue<User?>> {
     if (state.hasError) {
       showFirebaseErrorSnack(context, state.error);
     } else {
-      context.goNamed(RouteNames.home);
+      context.goNamed(RouteNames.logoSplash, extra: 'signIn');
     }
   }
 

@@ -7,16 +7,9 @@ import 'package:flutter_senior_project/features/splash/splash_screen.dart';
 import 'package:flutter_senior_project/features/home/home_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-final authStateProvider = StreamProvider<User?>((ref) {
-  return FirebaseAuth.instance.authStateChanges();
-});
 
 final routerProvider = Provider<GoRouter>(
   (ref) {
-    final authState = ref.watch(authStateProvider);
-
     return GoRouter(
       initialLocation: RouteNames.logoSplashUrl,
       routes: [
@@ -26,7 +19,7 @@ final routerProvider = Provider<GoRouter>(
           pageBuilder: (context, state) {
             return MaterialPage(
               key: state.pageKey,
-              child: const SplashScreen(),
+              child: SplashScreen(action: state.extra as String?),
             );
           },
         ),
@@ -79,9 +72,3 @@ final routerProvider = Provider<GoRouter>(
     );
   },
 );
-
-class GoRouterRefreshStream extends ChangeNotifier {
-  GoRouterRefreshStream(Stream<dynamic> stream) {
-    stream.asBroadcastStream().listen((_) => notifyListeners());
-  }
-}

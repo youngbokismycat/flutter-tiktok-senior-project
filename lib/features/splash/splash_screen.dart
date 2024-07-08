@@ -5,8 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
+  final String? action;
   const SplashScreen({
     super.key,
+    required this.action,
   });
 
   @override
@@ -61,9 +63,19 @@ class SplashScreenState extends ConsumerState<SplashScreen>
         });
         Future.delayed(const Duration(milliseconds: 500), () {
           if (mounted) {
-            context.goNamed(
-              RouteNames.signIn,
-            );
+            if (widget.action == 'signIn') {
+              context.goNamed(
+                RouteNames.home,
+              );
+            } else if (widget.action == 'signUp') {
+              context.goNamed(
+                RouteNames.onboarding,
+              );
+            } else {
+              context.goNamed(
+                RouteNames.signIn,
+              );
+            }
           }
         });
       }
