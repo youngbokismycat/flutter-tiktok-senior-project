@@ -71,7 +71,8 @@ class SigninScreen extends HookConsumerWidget {
                       ),
                     ),
                   ),
-                  Expanded(
+                  Flexible(
+                    flex: 2,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
