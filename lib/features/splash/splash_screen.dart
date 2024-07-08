@@ -1,19 +1,19 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_senior_project/core/router/route_names.dart';
-import 'package:flutter_senior_project/core/utils/is_dark_mode.dart'; // Import the is_dark_mode utility
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({
+    super.key,
+  });
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  SplashScreenState createState() => SplashScreenState();
 }
 
-class _SplashScreenState extends ConsumerState<SplashScreen>
+class SplashScreenState extends ConsumerState<SplashScreen>
     with TickerProviderStateMixin {
   late final AnimationController _animationController;
   late final Animation<Color?> _colorAnimation;
@@ -24,7 +24,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+      vsync: this,
+      duration: const Duration(
+        seconds: 1,
+      ),
+    );
     _colorTween = ColorTween(
         begin: FlexColor.aquaBlueDarkPrimary,
         end: FlexColor.redWineDarkPrimary);
@@ -37,22 +41,32 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   void _startAnimations() {
     Future.delayed(const Duration(milliseconds: 100), () {
-      setState(() {
-        _opacity = 1.0;
-      });
+      if (mounted) {
+        setState(() {
+          _opacity = 1.0;
+        });
+      }
     });
 
-    Future.delayed(const Duration(milliseconds: 500), () {
-      _animationController.forward();
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (mounted) {
+        _animationController.forward();
+      }
     });
 
-    Future.delayed(const Duration(milliseconds: 2000), () {
-      setState(() {
-        _opacity = 0.0;
-      });
-      Future.delayed(const Duration(milliseconds: 500), () {
-        context.go(RouteNames.signInUrl);
-      });
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() {
+          _opacity = 0.0;
+        });
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            context.goNamed(
+              RouteNames.signIn,
+            );
+          }
+        });
+      }
     });
   }
 
@@ -74,7 +88,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             builder: (context, child) {
               return ShaderMask(
                 shaderCallback: (bounds) => LinearGradient(
-                  colors: [Colors.blue, _colorAnimation.value!],
+                  colors: [
+                    FlexColor.aquaBlueDarkPrimary,
+                    _colorAnimation.value!
+                  ],
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                 ).createShader(bounds),

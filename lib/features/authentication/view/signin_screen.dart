@@ -1,6 +1,12 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_senior_project/core/router/route_names.dart';
+import 'package:flutter_senior_project/features/authentication/view/widget/custom_login_button.dart';
+import 'package:flutter_senior_project/features/authentication/vm/auth_vm.dart';
+import 'package:flutter_senior_project/features/common/widget/auth_text_form_field.dart';
+import 'package:flutter_senior_project/features/common/widget/logo_gradient.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_senior_project/features/common/widget/default_padding.dart';
 import 'package:gap/gap.dart';
@@ -15,66 +21,104 @@ class SigninScreen extends HookConsumerWidget {
     final isLoading = useState(false);
     final formKey = useState(GlobalKey<FormState>());
 
-    void signIn() async {
-      if (!formKey.value.currentState!.validate()) {
-        return;
-      }
+    void signIn(GlobalKey<FormState> formKey, ValueNotifier<bool> isLoading,
+        BuildContext context) async {
+      if (formKey.currentState?.validate() ?? false) {
+        isLoading.value = true;
 
-      final email = emailController.text;
-      final password = passwordController.text;
-
-      isLoading.value = true;
-
-      try {
-        // Implement your sign-in logic here
-        // For example, using Firebase Authentication:
-        // await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-
-        // On success, navigate to the home screen
-        // context.go(RouteNames.homeUrl);
-      } catch (e) {
-        // Handle error
-      } finally {
+        await ref.read(authViewModelProvider.notifier).signIn(
+              emailController.text,
+              passwordController.text,
+              context,
+            );
         isLoading.value = false;
       }
     }
 
+    void onSignupTap(BuildContext context) {
+      context.pushNamed(
+        RouteNames.signUp,
+      );
+    }
+
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: DefaultPadding(
           child: Form(
             key: formKey.value,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextFormField(
-                  controller: emailController,
-                  decoration: const InputDecoration(labelText: '이메일'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '이메일을 입력해주세요.';
-                    }
-                    return null;
-                  },
+                Expanded(
+                  child: Center(
+                    child: ShaderMask(
+                      shaderCallback: (bounds) => gradient.createShader(
+                        bounds,
+                      ),
+                      child: const Text(
+                        '물들다',
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                const Gap(10),
-                TextFormField(
-                  controller: passwordController,
-                  decoration: const InputDecoration(labelText: '비밀번호'),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '비밀번호를 입력해주세요.';
-                    }
-                    return null;
-                  },
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'LOGIN',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      const Gap(5),
+                      CustomTextFormField(
+                        controller: emailController,
+                        labelText: '이메일',
+                      ),
+                      const Gap(10),
+                      CustomTextFormField(
+                        controller: passwordController,
+                        obscureText: true,
+                        labelText: '비밀번호',
+                      ),
+                      const Gap(20),
+                      CustomLoginButton(
+                        text: '로그인',
+                        textColor: Colors.white,
+                        onPressed: () => signIn(
+                          formKey.value,
+                          isLoading,
+                          context,
+                        ),
+                        isLoading: isLoading.value,
+                      ),
+                      const Gap(5),
+                      const Opacity(
+                        opacity: 0.5,
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: Text(
+                            '비밀번호를 잊어먹으셨나요?',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 20),
-                CustomLoginButton(
-                  text: '로그인',
-                  textColor: Colors.white,
-                  onPressed: signIn,
-                  isLoading: isLoading.value,
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => onSignupTap(context),
+                    child: const Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                        '계정이 없다면?',
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -82,86 +126,5 @@ class SigninScreen extends HookConsumerWidget {
         ),
       ),
     );
-  }
-}
-
-class CustomLoginButton extends StatelessWidget {
-  final String text;
-  final Color textColor;
-  final VoidCallback onPressed;
-  final bool isLoading;
-
-  const CustomLoginButton({
-    super.key,
-    required this.text,
-    required this.textColor,
-    required this.onPressed,
-    this.isLoading = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: isLoading ? null : onPressed,
-      child: Container(
-        height: 50.0,
-        decoration: BoxDecoration(
-          gradient: isLoading
-              ? null
-              : const LinearGradient(
-                  colors: [
-                    FlexColor.aquaBlueDarkPrimary,
-                    FlexColor.redWineDarkPrimary,
-                  ],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
-          color: isLoading ? Colors.grey : null,
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: Center(
-          child: isLoading
-              ? CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(textColor),
-                )
-              : Text(
-                  text,
-                  style: TextStyle(
-                    color: textColor,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-        ),
-      ),
-    );
-  }
-}
-
-class GradientOutlineInputBorder extends OutlineInputBorder {
-  final Gradient gradient;
-
-  const GradientOutlineInputBorder({
-    super.borderRadius = BorderRadius.zero,
-    this.gradient = const LinearGradient(
-      colors: [Colors.blue, Colors.red],
-    ),
-  });
-
-  @override
-  void paint(
-    Canvas canvas,
-    Rect rect, {
-    double gapStart,
-    double gapExtent = 0.0,
-    double gapPercentage = 0.0,
-    TextDirection textDirection,
-  }) {
-    final paint = Paint()
-      ..shader = gradient.createShader(rect)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0;
-    final borderRect = rect.deflate(borderSide.width / 2.0);
-    canvas.drawRRect(borderRadius.toRRect(borderRect), paint);
   }
 }

@@ -13,4 +13,7 @@ class RouteNames {
 
   static const String verifyEmail = 'verify-email';
   static const String verifyEmailUrl = '/verify-email';
+
+  static const String onboarding = 'onboarding';
+  static const String onboardingUrl = '/onboarding';
 }

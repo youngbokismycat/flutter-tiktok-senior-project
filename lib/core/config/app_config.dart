@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +16,7 @@ abstract class AppConfig {
     brightness: Brightness.dark,
   );
 
-  static const FlexScheme scheme = FlexScheme.flutterDash;
+  static const FlexScheme scheme = FlexScheme.greyLaw;
   static const bool useScheme = true;
   static const double appBarElevation = 0;
   static const double appBarOpacity = 1;
