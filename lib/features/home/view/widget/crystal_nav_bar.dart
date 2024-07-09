@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:crystal_navigation_bar/crystal_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_senior_project/core/utils/is_dark_mode.dart';
 import 'package:flutter_senior_project/features/home/view/widget/nav_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -32,8 +33,13 @@ class CrystalNavBar extends HookConsumerWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
-                border: Border.all(color: Colors.white24),
-                color: Colors.grey.shade200,
+                border: Border.all(
+                    color: isDarkMode(ref)
+                        ? Colors.grey.shade700
+                        : Colors.white24),
+                color: isDarkMode(ref)
+                    ? Colors.grey.shade800
+                    : Colors.grey.shade200,
                 boxShadow: const [
                   BoxShadow(
                     color: Colors.transparent,

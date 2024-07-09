@@ -24,13 +24,18 @@ class NavButton extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         opacityNotifier.state = 0.0;
-        Future.delayed(const Duration(milliseconds: 300), () {
-          notifier.setIndex(index);
-
-          Future.delayed(const Duration(milliseconds: 100), () {
-            opacityNotifier.state = 1.0;
-          });
-        });
+        Future.delayed(
+          const Duration(milliseconds: 300),
+          () {
+            notifier.setIndex(index);
+            Future.delayed(
+              const Duration(milliseconds: 100),
+              () {
+                opacityNotifier.state = 1.0;
+              },
+            );
+          },
+        );
       },
       child: AnimatedOpacity(
         duration: const Duration(milliseconds: 300),

@@ -1,14 +1,11 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-// Define a provider for ThemeMode
-final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.light);
-
+final isDarkModeProvider = Provider<bool>((ref) {
+  final brightness = PlatformDispatcher.instance.platformBrightness;
+  return brightness == Brightness.dark;
+});
 bool isDarkMode(WidgetRef ref) {
-  return ref.read(themeModeProvider) == ThemeMode.dark;
-}
-
-// Utility method to check if the system theme is dark
-bool isSystemDarkMode(BuildContext context) {
-  return MediaQuery.of(context).platformBrightness == Brightness.dark;
+  final isDarkMode = ref.read(isDarkModeProvider);
+  return isDarkMode;
 }

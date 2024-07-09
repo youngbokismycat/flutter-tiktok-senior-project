@@ -5,6 +5,7 @@ import 'package:flutter_senior_project/core/config/app_config.dart';
 import 'package:flutter_senior_project/core/firebase/firebase_options.dart';
 import 'package:flutter_senior_project/core/router/router.dart';
 import 'package:flutter_senior_project/core/theme/brand_theme.dart';
+import 'package:flutter_senior_project/core/utils/is_dark_mode.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 Future<void> main() async {
@@ -93,7 +94,7 @@ class MyApp extends ConsumerWidget {
           darkBrandTheme,
         },
       ),
-      themeMode: themeMode,
+      themeMode: isDarkMode(ref) ? ThemeMode.dark : ThemeMode.light,
     );
   }
 }
