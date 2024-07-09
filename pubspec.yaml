@@ -58,6 +58,7 @@ dependencies:
   faker: ^2.1.0
   animate_gradient: ^0.0.3
   flutter_animate: ^4.5.0
+  glass_kit: ^4.0.1
 
 dev_dependencies:
   flutter_test:

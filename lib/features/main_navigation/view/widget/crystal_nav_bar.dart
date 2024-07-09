@@ -27,19 +27,20 @@ class CrystalNavBar extends HookConsumerWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(30),
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaY: 10, sigmaX: 10),
+            blendMode: BlendMode.src,
+            filter: ImageFilter.blur(sigmaY: 6, sigmaX: 6),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
                 border: Border.all(
-                    color: isDarkMode(ref)
-                        ? Colors.grey.shade700
-                        : Colors.white24),
-                color: isDarkMode(ref)
-                    ? Colors.grey.shade800
-                    : Colors.grey.shade200,
+                  color:
+                      isDarkMode(ref) ? Colors.grey.shade500 : Colors.white24,
+                ),
+                color: (isDarkMode(ref)
+                    ? Colors.grey.shade800.withOpacity(0.5)
+                    : Colors.grey.shade200.withOpacity(0.5)),
                 boxShadow: const [
                   BoxShadow(
                     color: Colors.transparent,

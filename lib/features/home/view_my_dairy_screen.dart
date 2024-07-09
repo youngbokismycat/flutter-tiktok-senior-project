@@ -33,41 +33,78 @@ class ViewMyDairyScreenState extends ConsumerState<ViewMyDairyScreen> {
           ),
         ),
       ),
-      headerWidget: isDarkMode(ref)
-          ? Container(
-              color: isDarkMode(ref)
-                  ? Platform.isAndroid
-                      ? darkModeColor
-                      : const Color.fromARGB(255, 25, 25, 25)
-                  : Colors.white,
-              child: Center(
-                child: CustomShader(
-                  child: Text(
-                    "물들다",
-                    style: Theme.of(context)
-                        .textTheme
-                        .displayMedium!
-                        .copyWith(color: Colors.white70),
-                  ),
-                ),
-              ),
-            )
-          : AnimateGradient(
-              duration: const Duration(seconds: 20),
-              primaryBeginGeometry: const AlignmentDirectional(0, 3),
-              primaryEndGeometry: const AlignmentDirectional(0, 2),
-              secondaryBeginGeometry: const AlignmentDirectional(2, 0),
-              secondaryEndGeometry: const AlignmentDirectional(0, -0.8),
-              textDirectionForGeometry: TextDirection.rtl,
-              primaryColors: const [
-                FlexColor.blueDarkPrimary,
-                FlexColor.redWineDarkPrimary,
-              ],
-              secondaryColors: const [
-                FlexColor.redWineDarkPrimary,
-                FlexColor.blueDarkPrimary,
-              ],
-              child: Center(
+      headerWidget: const HeaderWidget(),
+      body: const [
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 20.0,
+            vertical: 10,
+          ),
+          child: Diaries(),
+        )
+      ],
+    );
+  }
+}
+
+class Diaries extends StatelessWidget {
+  const Diaries({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      padding: const EdgeInsets.only(top: 0),
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: 20,
+      shrinkWrap: true,
+      separatorBuilder: (context, index) => const Gap(10),
+      itemBuilder: (context, index) => const DiaryCard(),
+    );
+  }
+}
+
+class DiaryCard extends StatelessWidget {
+  const DiaryCard({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 200,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(
+          24,
+        ),
+        border: Border.all(
+          width: 1,
+        ),
+      ),
+      child: Text(
+        faker.lorem.sentence(),
+      ),
+    );
+  }
+}
+
+class HeaderWidget extends ConsumerWidget {
+  const HeaderWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return isDarkMode(ref)
+        ? Container(
+            color: isDarkMode(ref)
+                ? Platform.isAndroid
+                    ? darkModeColor
+                    : const Color.fromARGB(255, 25, 25, 25)
+                : Colors.white,
+            child: Center(
+              child: CustomShader(
                 child: Text(
                   "물들다",
                   style: Theme.of(context)
@@ -77,37 +114,31 @@ class ViewMyDairyScreenState extends ConsumerState<ViewMyDairyScreen> {
                 ),
               ),
             ),
-      headerBottomBar: const Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
-      ),
-      body: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: ListView.separated(
-            padding: const EdgeInsets.only(top: 0),
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: 20,
-            shrinkWrap: true,
-            separatorBuilder: (context, index) => const Gap(10),
-            itemBuilder: (context, index) => Container(
-              height: 200,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(
-                  24,
-                ),
-                border: Border.all(
-                  width: 1,
-                ),
-              ),
+          )
+        : AnimateGradient(
+            duration: const Duration(seconds: 20),
+            primaryBeginGeometry: const AlignmentDirectional(0, 3),
+            primaryEndGeometry: const AlignmentDirectional(0, 2),
+            secondaryBeginGeometry: const AlignmentDirectional(2, 0),
+            secondaryEndGeometry: const AlignmentDirectional(0, -0.8),
+            textDirectionForGeometry: TextDirection.rtl,
+            primaryColors: const [
+              FlexColor.blueDarkPrimary,
+              FlexColor.redWineDarkPrimary,
+            ],
+            secondaryColors: const [
+              FlexColor.redWineDarkPrimary,
+              FlexColor.blueDarkPrimary,
+            ],
+            child: Center(
               child: Text(
-                faker.lorem.sentence(),
+                "물들다",
+                style: Theme.of(context)
+                    .textTheme
+                    .displayMedium!
+                    .copyWith(color: Colors.white70),
               ),
             ),
-          ),
-        )
-      ],
-    );
+          );
   }
 }
