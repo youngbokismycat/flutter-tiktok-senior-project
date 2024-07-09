@@ -4,20 +4,28 @@ import 'package:faker/faker.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_senior_project/core/utils/is_dark_mode.dart';
 import 'package:flutter_senior_project/features/add/add_my_dairy_screen.dart';
+import 'package:flutter_senior_project/features/common/widget/custom_shader.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ViewMyDairyScreen extends StatefulWidget {
+class ViewMyDairyScreen extends ConsumerStatefulWidget {
   const ViewMyDairyScreen({super.key});
 
   @override
-  State<ViewMyDairyScreen> createState() => _ViewMyDairyScreenState();
+  ViewMyDairyScreenState createState() => ViewMyDairyScreenState();
 }
 
-class _ViewMyDairyScreenState extends State<ViewMyDairyScreen> {
+class ViewMyDairyScreenState extends ConsumerState<ViewMyDairyScreen> {
   @override
   Widget build(BuildContext context) {
     return DraggableHome(
-      title: const Text("물들다"),
+      backgroundColor: isDarkMode(ref) ? darkModeColor : Colors.white,
+      title: const CustomShader(
+        child: Text(
+          "물들다",
+        ),
+      ),
       headerWidget: headerWidget(context),
       headerBottomBar: headerBottomBarWidget(),
       body: [
@@ -71,7 +79,6 @@ class _ViewMyDairyScreenState extends State<ViewMyDairyScreen> {
       itemCount: 20,
       shrinkWrap: true,
       itemBuilder: (context, index) => Card(
-        color: Colors.white70,
         child: ListTile(
           leading: CircleAvatar(
             child: Text("$index"),
