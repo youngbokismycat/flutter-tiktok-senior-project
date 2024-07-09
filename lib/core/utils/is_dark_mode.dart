@@ -23,3 +23,5 @@ bool isDarkMode(WidgetRef ref) {
   final isDarkMode = ref.watch(darkModeProvider);
   return isDarkMode;
 }
+
+const darkModeColor = Color(0xFF121212);

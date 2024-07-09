@@ -3,11 +3,11 @@ import 'dart:ui';
 import 'package:crystal_navigation_bar/crystal_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_senior_project/core/utils/is_dark_mode.dart';
-import 'package:flutter_senior_project/features/home/view/widget/nav_button.dart';
+import 'package:flutter_senior_project/features/main_navigation/view/widget/nav_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'package:flutter_senior_project/features/home/vm/bottom_nav_vm.dart';
+import 'package:flutter_senior_project/features/main_navigation/vm/bottom_nav_vm.dart';
 
 class CrystalNavBar extends HookConsumerWidget {
   const CrystalNavBar({super.key});

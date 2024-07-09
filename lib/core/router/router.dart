@@ -4,14 +4,14 @@ import 'package:flutter_senior_project/features/authentication/view/signin_scree
 import 'package:flutter_senior_project/features/authentication/view/signup_screen.dart';
 import 'package:flutter_senior_project/features/onboarding/view/onboarding_screen.dart';
 import 'package:flutter_senior_project/features/splash/splash_screen.dart';
-import 'package:flutter_senior_project/features/home/view/home_screen.dart';
+import 'package:flutter_senior_project/features/main_navigation/view/main_navigation_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 final routerProvider = Provider<GoRouter>(
   (ref) {
     return GoRouter(
-      initialLocation: RouteNames.logoSplashUrl,
+      initialLocation: RouteNames.homeUrl,
       routes: [
         GoRoute(
           name: RouteNames.logoSplash,
@@ -49,7 +49,7 @@ final routerProvider = Provider<GoRouter>(
           name: RouteNames.home,
           path: RouteNames.homeUrl,
           pageBuilder: (context, state) =>
-              transitionPage(state, const HomeScreen()),
+              transitionPage(state, const MainNavigation()),
         ),
       ],
     );
