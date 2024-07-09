@@ -10,7 +10,7 @@ import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter_senior_project/core/router/route_names.dart';
 import 'package:flutter_senior_project/core/utils/transition_animation.dart';
 import 'package:flutter_senior_project/features/common/widget/logo_gradient.dart';
-import 'package:flutter_senior_project/features/home/home_screen.dart';
+import 'package:flutter_senior_project/features/home/view/home_screen.dart';
 
 class OnboardingScreen extends HookConsumerWidget {
   const OnboardingScreen({super.key});
