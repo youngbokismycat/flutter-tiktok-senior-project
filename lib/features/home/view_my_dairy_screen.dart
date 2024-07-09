@@ -29,31 +29,48 @@ class ViewMyDairyScreenState extends ConsumerState<ViewMyDairyScreen> {
           ),
         ),
       ),
-      headerWidget: AnimateGradient(
-        duration: const Duration(seconds: 20),
-        primaryBeginGeometry: const AlignmentDirectional(0, 3),
-        primaryEndGeometry: const AlignmentDirectional(0, 2),
-        secondaryBeginGeometry: const AlignmentDirectional(2, 0),
-        secondaryEndGeometry: const AlignmentDirectional(0, -0.8),
-        textDirectionForGeometry: TextDirection.rtl,
-        primaryColors: const [
-          FlexColor.blueDarkPrimary,
-          FlexColor.redWineDarkPrimary,
-        ],
-        secondaryColors: const [
-          FlexColor.redWineDarkPrimary,
-          FlexColor.blueDarkPrimary,
-        ],
-        child: Center(
-          child: Text(
-            "물들다",
-            style: Theme.of(context)
-                .textTheme
-                .displayMedium!
-                .copyWith(color: Colors.white70),
-          ),
-        ),
-      ),
+      headerWidget: isDarkMode(ref)
+          ? Container(
+              color: isDarkMode(ref)
+                  ? const Color.fromARGB(255, 25, 25, 25)
+                  : Colors.white,
+              child: Center(
+                child: CustomShader(
+                  child: Text(
+                    "물들다",
+                    style: Theme.of(context)
+                        .textTheme
+                        .displayMedium!
+                        .copyWith(color: Colors.white70),
+                  ),
+                ),
+              ),
+            )
+          : AnimateGradient(
+              duration: const Duration(seconds: 20),
+              primaryBeginGeometry: const AlignmentDirectional(0, 3),
+              primaryEndGeometry: const AlignmentDirectional(0, 2),
+              secondaryBeginGeometry: const AlignmentDirectional(2, 0),
+              secondaryEndGeometry: const AlignmentDirectional(0, -0.8),
+              textDirectionForGeometry: TextDirection.rtl,
+              primaryColors: const [
+                FlexColor.blueDarkPrimary,
+                FlexColor.redWineDarkPrimary,
+              ],
+              secondaryColors: const [
+                FlexColor.redWineDarkPrimary,
+                FlexColor.blueDarkPrimary,
+              ],
+              child: Center(
+                child: Text(
+                  "물들다",
+                  style: Theme.of(context)
+                      .textTheme
+                      .displayMedium!
+                      .copyWith(color: Colors.white70),
+                ),
+              ),
+            ),
       headerBottomBar: const Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.end,
