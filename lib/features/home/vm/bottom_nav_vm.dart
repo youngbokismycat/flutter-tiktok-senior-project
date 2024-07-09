@@ -12,3 +12,5 @@ final bottomNavigationProvider =
     StateNotifierProvider<BottomNavigationNotifier, int>((ref) {
   return BottomNavigationNotifier();
 });
+
+final opacityProvider = StateProvider<double>((ref) => 1.0);

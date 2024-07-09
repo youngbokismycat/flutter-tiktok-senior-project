@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_senior_project/features/home/vm/bottom_nav_vm.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class NavButton extends StatelessWidget {
   final int index;
@@ -11,19 +12,28 @@ class NavButton extends StatelessWidget {
     required this.icon,
     required this.notifier,
     required this.selectedIndex,
+    required this.opacityNotifier,
   });
 
   final BottomNavigationNotifier notifier;
   final int selectedIndex;
+  final StateController<double> opacityNotifier;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => notifier.setIndex(index),
+      onTap: () {
+        opacityNotifier.state = 0.0;
+        Future.delayed(const Duration(milliseconds: 300), () {
+          notifier.setIndex(index);
+
+          Future.delayed(const Duration(milliseconds: 100), () {
+            opacityNotifier.state = 1.0;
+          });
+        });
+      },
       child: AnimatedOpacity(
-        duration: const Duration(
-          milliseconds: 300,
-        ),
+        duration: const Duration(milliseconds: 300),
         opacity: selectedIndex == index ? 1 : 0.3,
         child: FaIcon(
           icon,

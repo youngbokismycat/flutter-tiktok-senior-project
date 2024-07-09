@@ -19,6 +19,8 @@ class HomeScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = ref.watch(bottomNavigationProvider);
+    final opacity = ref.watch(opacityProvider);
+    final offset = ref.watch(offsetProvider);
 
     final List<Widget> screens = [
       const ViewMyDairyScreen(),
@@ -27,14 +29,24 @@ class HomeScreen extends HookConsumerWidget {
     ];
 
     return Scaffold(
-      body: AnimatedOpacity(
-          opacity: 1,
-          duration: const Duration(
-            milliseconds: 300,
+      body: Stack(
+        children: [
+          AnimatedOpacity(
+            opacity: opacity,
+            duration: const Duration(milliseconds: 300),
+            child: AnimatedSlide(
+              offset: offset,
+              duration: const Duration(milliseconds: 300),
+              child: screens[selectedIndex],
+            ),
           ),
-          child: screens[selectedIndex]),
+          const Align(
+            alignment: Alignment.bottomCenter,
+            child: CrystalNavBar(),
+          ),
+        ],
+      ),
       extendBody: true,
-      bottomNavigationBar: const CrystalNavBar(),
     );
   }
 }

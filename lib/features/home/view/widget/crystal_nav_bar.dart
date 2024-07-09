@@ -15,25 +15,20 @@ class CrystalNavBar extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = ref.watch(bottomNavigationProvider);
     final notifier = ref.read(bottomNavigationProvider.notifier);
+    final opacityNotifier = ref.read(opacityProvider.notifier);
 
     return BottomAppBar(
       color: Colors.transparent,
       padding: EdgeInsets.zero,
       elevation: 0,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10,
-          vertical: 10,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(30),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaY: 10, sigmaX: 10),
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 10,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
@@ -55,18 +50,21 @@ class CrystalNavBar extends HookConsumerWidget {
                     NavButton(
                       notifier: notifier,
                       selectedIndex: selectedIndex,
+                      opacityNotifier: opacityNotifier,
                       icon: FontAwesomeIcons.house,
                       index: 0,
                     ),
                     NavButton(
                       notifier: notifier,
                       selectedIndex: selectedIndex,
+                      opacityNotifier: opacityNotifier,
                       icon: FontAwesomeIcons.plus,
                       index: 1,
                     ),
                     NavButton(
                       notifier: notifier,
                       selectedIndex: selectedIndex,
+                      opacityNotifier: opacityNotifier,
                       icon: FontAwesomeIcons.chartSimple,
                       index: 2,
                     ),
