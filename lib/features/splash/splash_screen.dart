@@ -107,9 +107,9 @@ class SplashScreenState extends ConsumerState<SplashScreen>
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                 ).createShader(bounds),
-                child: const Text(
-                  '물들다',
-                  style: TextStyle(
+                child: Text(
+                  widget.action == null ? '물들다' : '환영합니다, Youngbok 님!',
+                  style: const TextStyle(
                     fontSize: 30,
                     color: Colors.white,
                   ),

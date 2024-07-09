@@ -13,7 +13,28 @@ void transitionAnimationPushNamed(
     ),
   );
   await context.pushNamed(
-    RouteNames.signUp,
+    routeName,
+  );
+  opacity.value = 1.0;
+}
+
+void transitionAnimationPushNamedAndReplace(
+    {required BuildContext context,
+    required ValueNotifier<double> opacity,
+    required String routeName}) async {
+  opacity.value = 0.0;
+  await Future.delayed(
+    const Duration(
+      milliseconds: 300,
+    ),
+  );
+  context.pushReplacementNamed(
+    routeName,
+  );
+  await Future.delayed(
+    const Duration(
+      milliseconds: 400,
+    ),
   );
   opacity.value = 1.0;
 }

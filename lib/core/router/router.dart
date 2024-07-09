@@ -11,7 +11,7 @@ import 'package:go_router/go_router.dart';
 final routerProvider = Provider<GoRouter>(
   (ref) {
     return GoRouter(
-      initialLocation: RouteNames.logoSplashUrl,
+      initialLocation: RouteNames.onboardingUrl,
       routes: [
         GoRoute(
           name: RouteNames.logoSplash,
@@ -42,7 +42,7 @@ final routerProvider = Provider<GoRouter>(
           path: RouteNames.onboardingUrl,
           pageBuilder: (context, state) => transitionPage(
             state,
-            const OnboardingScreen(),
+            OnboardingScreen(),
           ),
         ),
         GoRoute(
