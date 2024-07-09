@@ -11,7 +11,7 @@ import 'package:go_router/go_router.dart';
 final routerProvider = Provider<GoRouter>(
   (ref) {
     return GoRouter(
-      initialLocation: RouteNames.homeUrl,
+      initialLocation: RouteNames.logoSplashUrl,
       routes: [
         GoRoute(
           name: RouteNames.logoSplash,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:animate_gradient/animate_gradient.dart';
 import 'package:draggable_home/draggable_home.dart';
 import 'package:faker/faker.dart';
@@ -20,7 +22,9 @@ class ViewMyDairyScreenState extends ConsumerState<ViewMyDairyScreen> {
   @override
   Widget build(BuildContext context) {
     return DraggableHome(
-      backgroundColor: isDarkMode(ref) ? darkModeColor : Colors.white,
+      backgroundColor: isDarkMode(ref)
+          ? const Color.fromARGB(255, 35, 35, 35)
+          : Colors.white,
       title: const CustomShader(
         child: Text(
           "물들다",
@@ -32,7 +36,9 @@ class ViewMyDairyScreenState extends ConsumerState<ViewMyDairyScreen> {
       headerWidget: isDarkMode(ref)
           ? Container(
               color: isDarkMode(ref)
-                  ? const Color.fromARGB(255, 25, 25, 25)
+                  ? Platform.isAndroid
+                      ? darkModeColor
+                      : const Color.fromARGB(255, 25, 25, 25)
                   : Colors.white,
               child: Center(
                 child: CustomShader(
@@ -88,12 +94,13 @@ class ViewMyDairyScreenState extends ConsumerState<ViewMyDairyScreen> {
             itemBuilder: (context, index) => Container(
               height: 200,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    24,
-                  ),
-                  border: Border.all(
-                    width: 1,
-                  )),
+                borderRadius: BorderRadius.circular(
+                  24,
+                ),
+                border: Border.all(
+                  width: 1,
+                ),
+              ),
               child: Text(
                 faker.lorem.sentence(),
               ),
