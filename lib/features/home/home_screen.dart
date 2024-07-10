@@ -7,7 +7,9 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_senior_project/core/utils/is_dark_mode.dart';
+import 'package:flutter_senior_project/features/common/widget/custom_animate_gradient.dart';
 import 'package:flutter_senior_project/features/common/widget/custom_shader.dart';
+import 'package:flutter_senior_project/features/detail_diary/detail_diary_card_screen.dart';
 import 'package:flutter_senior_project/features/home/widget/diary_card.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -55,7 +57,7 @@ class Diaries extends StatelessWidget {
       itemCount: 1,
       shrinkWrap: true,
       separatorBuilder: (context, index) => const Gap(10),
-      itemBuilder: (context, index) => const DiaryCard(),
+      itemBuilder: (context, index) => DiaryCard(index: index),
     );
   }
 }
@@ -86,21 +88,7 @@ class HeaderWidget extends ConsumerWidget {
               ),
             ),
           )
-        : AnimateGradient(
-            duration: const Duration(seconds: 20),
-            primaryBeginGeometry: const AlignmentDirectional(0, 3),
-            primaryEndGeometry: const AlignmentDirectional(0, 2),
-            secondaryBeginGeometry: const AlignmentDirectional(2, 0),
-            secondaryEndGeometry: const AlignmentDirectional(0, -0.8),
-            textDirectionForGeometry: TextDirection.rtl,
-            primaryColors: const [
-              FlexColor.blueDarkPrimary,
-              FlexColor.redWineDarkPrimary,
-            ],
-            secondaryColors: const [
-              FlexColor.redWineDarkPrimary,
-              FlexColor.blueDarkPrimary,
-            ],
+        : CustomAnimateGradient(
             child: Center(
               child: Text(
                 "물들다",
