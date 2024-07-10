@@ -59,6 +59,8 @@ dependencies:
   animate_gradient: ^0.0.3
   flutter_animate: ^4.5.0
   glass_kit: ^4.0.1
+  weather_animation: ^1.0.1
+  animated_emoji: ^3.1.0
 
 dev_dependencies:
   flutter_test:

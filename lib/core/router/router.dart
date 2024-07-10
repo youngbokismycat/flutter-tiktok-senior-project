@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_senior_project/core/router/route_names.dart';
 import 'package:flutter_senior_project/features/authentication/view/signin_screen.dart';
 import 'package:flutter_senior_project/features/authentication/view/signup_screen.dart';
+import 'package:flutter_senior_project/features/detail_diary/detail_diary_screen.dart';
 import 'package:flutter_senior_project/features/onboarding/onboarding_screen.dart';
 import 'package:flutter_senior_project/features/splash/splash_screen.dart';
 import 'package:flutter_senior_project/features/main_navigation/view/main_navigation_screen.dart';
@@ -48,8 +49,18 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: RouteNames.home,
           path: RouteNames.homeUrl,
-          pageBuilder: (context, state) =>
-              transitionPage(state, const MainNavigation()),
+          pageBuilder: (context, state) => transitionPage(
+            state,
+            const MainNavigation(),
+          ),
+        ),
+        GoRoute(
+          name: RouteNames.detailDiary,
+          path: RouteNames.detailDiaryUrl,
+          pageBuilder: (context, state) => transitionPage(
+            state,
+            const DetailDiaryScreen(),
+          ),
         ),
       ],
     );

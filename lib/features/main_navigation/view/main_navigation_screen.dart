@@ -8,7 +8,7 @@ import 'package:flutter_senior_project/features/add/add_my_dairy_screen.dart';
 import 'package:flutter_senior_project/features/anaysis/anaysis_my_dairy_screen.dart';
 import 'package:flutter_senior_project/features/main_navigation/view/widget/crystal_nav_bar.dart';
 import 'package:flutter_senior_project/features/main_navigation/vm/bottom_nav_vm.dart';
-import 'package:flutter_senior_project/features/home/view_my_dairy_screen.dart';
+import 'package:flutter_senior_project/features/home/home_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

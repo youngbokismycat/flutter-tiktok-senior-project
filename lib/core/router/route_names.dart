@@ -16,4 +16,7 @@ class RouteNames {
 
   static const String onboarding = 'onboarding';
   static const String onboardingUrl = '/onboarding';
+
+  static const String detailDiary = 'detailDiary';
+  static const String detailDiaryUrl = '/detailDiary';
 }

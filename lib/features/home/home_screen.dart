@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_senior_project/core/utils/is_dark_mode.dart';
 import 'package:flutter_senior_project/features/common/widget/custom_shader.dart';
+import 'package:flutter_senior_project/features/home/widget/diary_card.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -35,13 +36,7 @@ class ViewMyDairyScreenState extends ConsumerState<ViewMyDairyScreen> {
       ),
       headerWidget: const HeaderWidget(),
       body: const [
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 20.0,
-            vertical: 10,
-          ),
-          child: Diaries(),
-        )
+        Diaries(),
       ],
     );
   }
@@ -57,34 +52,10 @@ class Diaries extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.only(top: 0),
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: 20,
+      itemCount: 1,
       shrinkWrap: true,
       separatorBuilder: (context, index) => const Gap(10),
       itemBuilder: (context, index) => const DiaryCard(),
-    );
-  }
-}
-
-class DiaryCard extends StatelessWidget {
-  const DiaryCard({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(
-          24,
-        ),
-        border: Border.all(
-          width: 1,
-        ),
-      ),
-      child: Text(
-        faker.lorem.sentence(),
-      ),
     );
   }
 }
