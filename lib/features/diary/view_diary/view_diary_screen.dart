@@ -7,10 +7,11 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_senior_project/core/utils/is_dark_mode.dart';
+import 'package:flutter_senior_project/features/diary/add_diary/add_my_dairy_screen.dart';
 import 'package:flutter_senior_project/features/common/widget/custom_animate_gradient.dart';
 import 'package:flutter_senior_project/features/common/widget/custom_shader.dart';
-import 'package:flutter_senior_project/features/detail_diary/detail_diary_card_screen.dart';
-import 'package:flutter_senior_project/features/home/widget/diary_card.dart';
+import 'package:flutter_senior_project/features/diary/detail_diary/detail_diary_card_screen.dart';
+import 'package:flutter_senior_project/features/diary/view_diary/widget/diary_card.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -25,6 +26,8 @@ class ViewMyDairyScreenState extends ConsumerState<ViewMyDairyScreen> {
   @override
   Widget build(BuildContext context) {
     return DraggableHome(
+      expandedBody: const AddMyDairyScreen(),
+      fullyStretchable: true,
       backgroundColor: isDarkMode(ref)
           ? const Color.fromARGB(255, 35, 35, 35)
           : Colors.white,

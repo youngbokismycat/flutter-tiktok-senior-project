@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_senior_project/core/utils/is_dark_mode.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:weather_animation/weather_animation.dart';
 
 const CloudWidget bigCloudWidget = CloudWidget(
@@ -121,7 +124,7 @@ abstract class WeatherConfiguration {
     children: [
       const RainWidget(
         rainConfig: RainConfig(
-          areaYStart: 208,
+          areaYStart: 100,
         ),
       ),
       const CloudWidget(

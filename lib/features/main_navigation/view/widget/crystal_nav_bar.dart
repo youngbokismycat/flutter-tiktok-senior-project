@@ -28,7 +28,7 @@ class CrystalNavBar extends HookConsumerWidget {
           borderRadius: BorderRadius.circular(30),
           child: BackdropFilter(
             blendMode: BlendMode.src,
-            filter: ImageFilter.blur(sigmaY: 6, sigmaX: 6),
+            filter: ImageFilter.blur(sigmaY: 1, sigmaX: 1),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               width: double.infinity,
@@ -65,15 +65,8 @@ class CrystalNavBar extends HookConsumerWidget {
                       notifier: notifier,
                       selectedIndex: selectedIndex,
                       opacityNotifier: opacityNotifier,
-                      icon: FontAwesomeIcons.plus,
-                      index: 1,
-                    ),
-                    NavButton(
-                      notifier: notifier,
-                      selectedIndex: selectedIndex,
-                      opacityNotifier: opacityNotifier,
                       icon: FontAwesomeIcons.chartSimple,
-                      index: 2,
+                      index: 1,
                     ),
                   ],
                 ),
