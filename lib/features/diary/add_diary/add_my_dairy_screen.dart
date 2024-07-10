@@ -12,36 +12,30 @@ class AddMyDairyScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final opacity0 = useState(0.0);
-    final opacity1 = useState(0.0);
-    final emojiOpacities = [
-      useState(0.0),
-      useState(0.0),
-      useState(0.0),
-      useState(0.0),
-      useState(0.0)
-    ];
-    final y = useState(0.0);
+    final animationController = useAnimationController(
+      duration: const Duration(milliseconds: 2000),
+    );
 
-    Future.delayed(const Duration(milliseconds: 700), () {
-      opacity0.value = 1.0;
-    });
+    final selectedEmojiIndex = useState<int?>(null);
 
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      y.value = -1.5;
-    });
+    useEffect(() {
+      animationController.forward();
+      return () {};
+    }, [animationController]);
 
-    Future.delayed(const Duration(milliseconds: 1800), () {
-      opacity1.value = 1.0;
-    });
-
-    for (int i = 0; i < emojiOpacities.length; i++) {
-      Future.delayed(Duration(milliseconds: 2100 + i * 300), () {
-        emojiOpacities[i].value = 1.0;
-      });
+    void onMoodTap(int index) {
+      selectedEmojiIndex.value = index;
+      for (int i = 0; i < 5; i++) {
+        if (i != index) {
+          Future.delayed(
+              const Duration(
+                milliseconds: 1000,
+              ), () {
+            animationController.reverse(from: 1.0);
+          });
+        }
+      }
     }
-
-    void onMoodTap() {}
 
     return Scaffold(
       extendBody: true,
@@ -50,45 +44,115 @@ class AddMyDairyScreen extends HookConsumerWidget {
           child: LayoutBuilder(
             builder: (context, constraints) {
               final screenWidth = constraints.maxWidth;
+              final screenHeight = constraints.maxHeight;
               final emojiSpacing =
-                  (screenWidth - 50.0 * emojiOpacities.length) /
-                      (emojiOpacities.length + 1);
+                  (screenWidth - 50.0 * 5) / (5 + 1); // 5 emojis hardcoded
 
               return Stack(
                 alignment: Alignment.center,
                 children: [
-                  AnimatedSlide(
-                    curve: Curves.ease,
-                    duration: const Duration(milliseconds: 700),
-                    offset: Offset(0, y.value),
-                    child: AnimatedOpacity(
-                      duration: const Duration(milliseconds: 700),
-                      opacity: opacity0.value,
-                      child: const Text(
-                        "Youngbok 님! 지금은 어떤 기분이신가요?",
-                        style: CustomTextTheme.whiteMedium,
-                      ),
-                    ),
-                  ),
-                  AnimatedOpacity(
-                    duration: const Duration(milliseconds: 300),
-                    opacity: opacity1.value,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: List.generate(emojiOpacities.length, (index) {
-                        return Positioned(
-                          left: emojiSpacing + index * (50.0 + emojiSpacing),
-                          child: AnimatedOpacity(
-                            duration: const Duration(milliseconds: 300),
-                            opacity: emojiOpacities[index].value,
-                            child: EmojiButton(
-                              emoji: getEmoji(index),
-                              label: getLabel(index),
-                            ),
+                  AnimatedBuilder(
+                    animation: animationController,
+                    builder: (context, child) {
+                      final opacity0 = Tween(begin: 0.0, end: 1.0).animate(
+                        CurvedAnimation(
+                          parent: animationController,
+                          curve: const Interval(0.0, 0.2333),
+                        ),
+                      );
+
+                      final yOffset = Tween(begin: 0.0, end: -1.5).animate(
+                        CurvedAnimation(
+                          parent: animationController,
+                          curve: const Interval(0.2333, 0.5),
+                        ),
+                      );
+
+                      final opacity1 = Tween(begin: 0.0, end: 1.0).animate(
+                        CurvedAnimation(
+                          parent: animationController,
+                          curve: const Interval(0.5, 0.6),
+                        ),
+                      );
+
+                      final emojiOpacities = List.generate(5, (index) {
+                        double startInterval = 0.7 + index * 0.05;
+                        double endInterval = startInterval + 0.1;
+                        if (endInterval > 1.0) {
+                          endInterval = 1.0;
+                        }
+                        return Tween(begin: 0.0, end: 1.0).animate(
+                          CurvedAnimation(
+                            parent: animationController,
+                            curve: Interval(startInterval, endInterval),
                           ),
                         );
-                      }),
-                    ),
+                      });
+
+                      return Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          SlideTransition(
+                            position: Tween<Offset>(
+                              begin: Offset.zero,
+                              end: Offset(0, yOffset.value),
+                            ).animate(CurvedAnimation(
+                              parent: animationController,
+                              curve: Curves.ease,
+                            )),
+                            child: Opacity(
+                              opacity: opacity0.value,
+                              child: const Text(
+                                "Youngbok 님! 지금은 어떤 기분이신가요?",
+                                style: CustomTextTheme.whiteMedium,
+                              ),
+                            ),
+                          ),
+                          Opacity(
+                            opacity: opacity1.value,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: List.generate(5, (index) {
+                                final isSelected =
+                                    selectedEmojiIndex.value == index;
+                                return AnimatedPositioned(
+                                  curve: Curves.easeInOut,
+                                  duration: const Duration(milliseconds: 700),
+                                  left: isSelected
+                                      ? (screenWidth / 2 - 25)
+                                      : emojiSpacing +
+                                          index * (50.0 + emojiSpacing),
+                                  top: isSelected
+                                      ? (screenHeight / 2 - 25)
+                                      : screenHeight / 2 - 25,
+                                  child: AnimatedScale(
+                                    curve: Curves.easeOutCirc,
+                                    duration: const Duration(
+                                      seconds: 2,
+                                    ),
+                                    scale: isSelected ? 2 : 1,
+                                    child: AnimatedOpacity(
+                                      duration:
+                                          const Duration(milliseconds: 500),
+                                      opacity:
+                                          selectedEmojiIndex.value != null &&
+                                                  !isSelected
+                                              ? 0.0
+                                              : emojiOpacities[index].value,
+                                      child: EmojiButton(
+                                        emoji: getEmoji(index),
+                                        label: getLabel(index),
+                                        onTap: () => onMoodTap(index),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ],
               );
@@ -137,15 +201,19 @@ class AddMyDairyScreen extends HookConsumerWidget {
 class EmojiButton extends StatelessWidget {
   final AnimatedEmojiData emoji;
   final String label;
+  final VoidCallback onTap;
 
-  const EmojiButton({required this.emoji, required this.label, super.key});
+  const EmojiButton({
+    required this.emoji,
+    required this.label,
+    required this.onTap,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        print('$label emoji tapped');
-      },
+      onTap: onTap,
       child: AnimatedEmoji(
         emoji,
         size: 50,
