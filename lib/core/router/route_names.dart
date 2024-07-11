@@ -19,4 +19,7 @@ class RouteNames {
 
   static const String detailDiary = 'detailDiary';
   static const String detailDiaryUrl = '/detailDiary';
+
+  static const String settings = 'settings';
+  static const String settingsUrl = '/settings';
 }

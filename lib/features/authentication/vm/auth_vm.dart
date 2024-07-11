@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_senior_project/core/router/route_names.dart';
-import 'package:flutter_senior_project/core/utils/show_firebase_error.dart';
+import 'package:flutter_senior_project/features/common/utils/show_firebase_error.dart';
 import 'package:flutter_senior_project/features/authentication/repo/auth_repo.dart';
 import 'package:go_router/go_router.dart';
 

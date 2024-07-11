@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_senior_project/core/utils/transition_animation.dart';
+import 'package:flutter_senior_project/features/common/utils/transition_animation.dart';
 import 'package:flutter_senior_project/features/authentication/view/widget/custom_login_button.dart';
 import 'package:flutter_senior_project/features/authentication/vm/auth_vm.dart';
-import 'package:flutter_senior_project/features/common/widget/auth_text_form_field.dart';
+import 'package:flutter_senior_project/features/authentication/view/widget/auth_text_form_field.dart';
 import 'package:flutter_senior_project/features/common/widget/logo_gradient.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_senior_project/features/common/widget/default_padding.dart';

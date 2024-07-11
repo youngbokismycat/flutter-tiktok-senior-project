@@ -1,7 +1,7 @@
 import 'package:animate_gradient/animate_gradient.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_senior_project/core/utils/is_dark_mode.dart';
+import 'package:flutter_senior_project/features/common/utils/is_dark_mode.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class CustomAnimateGradient extends ConsumerWidget {

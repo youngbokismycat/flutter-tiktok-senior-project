@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_senior_project/core/router/route_names.dart';
 import 'package:flutter_senior_project/features/authentication/view/signin_screen.dart';
 import 'package:flutter_senior_project/features/authentication/view/signup_screen.dart';
-import 'package:flutter_senior_project/features/diary/detail_diary/detail_diary_card_screen.dart';
+import 'package:flutter_senior_project/features/diary/view/detail_diary/detail_diary_card_screen.dart';
 import 'package:flutter_senior_project/features/onboarding/onboarding_screen.dart';
+import 'package:flutter_senior_project/features/settings/settings_screen.dart';
 import 'package:flutter_senior_project/features/splash/splash_screen.dart';
 import 'package:flutter_senior_project/features/main_navigation/view/main_navigation_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -62,6 +63,14 @@ final routerProvider = Provider<GoRouter>(
             DetailDiaryCardScreen(
               index: state.extra as int,
             ),
+          ),
+        ),
+        GoRoute(
+          name: RouteNames.settings,
+          path: RouteNames.settingsUrl,
+          pageBuilder: (context, state) => transitionPage(
+            state,
+            const SettingsScreen(),
           ),
         ),
       ],

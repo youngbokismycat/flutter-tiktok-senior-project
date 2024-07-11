@@ -1,9 +1,8 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter_senior_project/features/diary/analysis_diary/anaysis_my_dairy_screen.dart';
+import 'package:flutter_senior_project/features/diary/view/analysis_diary/anaysis_my_dairy_screen.dart';
 import 'package:flutter_senior_project/features/main_navigation/view/widget/crystal_nav_bar.dart';
 import 'package:flutter_senior_project/features/main_navigation/vm/bottom_nav_vm.dart';
-import 'package:flutter_senior_project/features/diary/view_diary/view_diary_screen.dart';
+import 'package:flutter_senior_project/features/diary/view/view_diary/view_diary_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class MainNavigation extends HookConsumerWidget {

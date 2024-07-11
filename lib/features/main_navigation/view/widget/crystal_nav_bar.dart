@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_senior_project/core/utils/is_dark_mode.dart';
+import 'package:flutter_senior_project/features/common/utils/is_dark_mode.dart';
 import 'package:flutter_senior_project/features/main_navigation/view/widget/nav_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

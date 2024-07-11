@@ -1,12 +1,13 @@
 import 'package:animated_emoji/animated_emoji.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_senior_project/features/diary/view/add_diary/widget/emoji_button.dart';
+import 'package:gap/gap.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_senior_project/core/config/wheather_config.dart';
 import 'package:flutter_senior_project/core/theme/text_theme.dart';
 import 'package:flutter_senior_project/features/common/widget/custom_animate_gradient.dart';
-import 'package:gap/gap.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'dart:convert';
 
 class AddMyDairyScreen extends HookConsumerWidget {
   const AddMyDairyScreen({super.key});
@@ -21,9 +22,16 @@ class AddMyDairyScreen extends HookConsumerWidget {
       duration: const Duration(seconds: 1),
     );
     final isStartSelectWeather = useState(false);
-    final shouldVisible = useState(false);
+    final shouldVisibleCards = useState(false);
+    final shouldVisibleSelectedCards = useState(false);
     final selectedEmojiIndex = useState<int?>(null);
     final selectedWeatherIndex = useState<int?>(null);
+
+    final TextEditingController controller1 = useTextEditingController();
+    final TextEditingController controller2 = useTextEditingController();
+    final TextEditingController controller3 = useTextEditingController();
+
+    final isButtonEnabled = useState(false);
 
     useEffect(() {
       animationController.forward();
@@ -36,6 +44,24 @@ class AddMyDairyScreen extends HookConsumerWidget {
       }
       return null;
     }, [selectedWeatherIndex.value]);
+
+    useEffect(() {
+      void listener() {
+        isButtonEnabled.value = controller1.text.isNotEmpty &&
+            controller2.text.isNotEmpty &&
+            controller3.text.isNotEmpty;
+      }
+
+      controller1.addListener(listener);
+      controller2.addListener(listener);
+      controller3.addListener(listener);
+
+      return () {
+        controller1.removeListener(listener);
+        controller2.removeListener(listener);
+        controller3.removeListener(listener);
+      };
+    }, [controller1, controller2, controller3]);
 
     void onMoodTap(int index) async {
       selectedEmojiIndex.value = index;
@@ -52,7 +78,7 @@ class AddMyDairyScreen extends HookConsumerWidget {
         ),
       );
       isStartSelectWeather.value = true;
-      shouldVisible.value = true;
+      shouldVisibleCards.value = true;
     }
 
     void onWeatherTap(int index) async {
@@ -60,7 +86,10 @@ class AddMyDairyScreen extends HookConsumerWidget {
 
       await Future.delayed(const Duration(milliseconds: 500));
       isStartSelectWeather.value = false;
-      shouldVisible.value = true;
+      shouldVisibleCards.value = true;
+
+      await Future.delayed(const Duration(seconds: 1));
+      shouldVisibleSelectedCards.value = true;
     }
 
     final opacity0 = useMemoized(() {
@@ -125,65 +154,46 @@ class AddMyDairyScreen extends HookConsumerWidget {
                   ),
                   _buildWeatherSelection(
                     isStartSelectWeather.value,
-                    shouldVisible.value,
+                    shouldVisibleCards.value,
                     selectedWeatherIndex.value,
                     onWeatherTap,
                     weatherAnimationController,
                   ),
-                  Stack(
-                    alignment: Alignment.topCenter,
-                    children: [
-                      Transform.scale(
-                        scale: 1.1,
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(24),
-                            child: WeatherConfiguration.rainyEvening),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 25.0,
-                        ),
-                        child: ListTile(
-                          leading: const AnimatedEmoji(
-                            AnimatedEmojis.sad,
-                            size: 32,
-                          ),
-                          title: TextFormField(
-                            decoration: const InputDecoration(
-                              fillColor: Colors.red,
-                              contentPadding: EdgeInsets.zero,
-                            ),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                            ),
-                          ),
-                          subtitle: const Text(
-                            '그냥 슬펐다.',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Transform.translate(
-                        offset: const Offset(0, 80),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 25,
-                          ),
-                          child: ListTile(
-                            title: Text(
-                              '아침부터 기분이 안 좋았다. 날씨도 우중충하고, 머리도 띵해서 공부한 내용이 머릿속에 제대로 들어오지도 않았다. 시험지 앞에 앉았을 때, 문제들이 너무 어려워서 당황했다. 분명 공부했던 내용인데, 머릿속이 하얘졌다. 첫 문제부터 막혔고, 시간이 갈수록 더 조급해졌다. 시계 초침 소리가 점점 크게 들리는 것 같았다. 답을 적으려고 애썼지만, 자신이 없었다. 마지막 문제까지 제대로 풀지 못했다.',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 500),
+                    child: shouldVisibleSelectedCards.value
+                        ? _buildSelectedWeatherAndEmoji(
+                            selectedWeatherIndex.value!,
+                            selectedEmojiIndex.value!,
+                            controller1,
+                            controller2,
+                            controller3,
+                          )
+                        : const SizedBox(),
+                  ),
+                  Positioned(
+                    bottom: 20,
+                    right: 20,
+                    child: ElevatedButton(
+                      onPressed: isButtonEnabled.value
+                          ? () {
+                              final postData = {
+                                'selectedEmoji':
+                                    getLabel(selectedEmojiIndex.value!),
+                                'selectedWeather': getWeatherLable(
+                                  selectedWeatherIndex.value!,
+                                ),
+                                'title': controller1.text,
+                                'subtitle': controller2.text,
+                                'diaryEntry': controller3.text,
+                              };
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(
+                                      'Data saved: ${jsonEncode(postData)}')));
+                            }
+                          : null,
+                      child: const Text('Complete'),
+                    ),
                   ),
                 ],
               );
@@ -254,16 +264,16 @@ class AddMyDairyScreen extends HookConsumerWidget {
 
   Widget _buildWeatherSelection(
     bool isStartSelectWeather,
-    bool shouldVisible,
+    bool shouldVisibleCards,
     int? selectedWeatherIndex,
     void Function(int) onWeatherTap,
     AnimationController weatherAnimationController,
   ) {
     return AnimatedOpacity(
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 500),
       opacity: isStartSelectWeather ? 1 : 0,
       child: Visibility(
-        visible: shouldVisible,
+        visible: shouldVisibleCards,
         child: StatefulBuilder(
           builder: (context, setState) {
             return AnimatedBuilder(
@@ -274,7 +284,7 @@ class AddMyDairyScreen extends HookConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text(
-                        '기분을 날씨로 표현해보세요!',
+                        '날씨카드를 고르세요!',
                         style: CustomTextTheme.whiteMedium,
                       ),
                       const Gap(30),
@@ -308,7 +318,7 @@ class AddMyDairyScreen extends HookConsumerWidget {
                               child: AnimatedScale(
                                 duration: const Duration(milliseconds: 500),
                                 curve: Curves.ease,
-                                scale: isSelected ? 1.1 : 1.0,
+                                scale: isSelected ? 1.05 : 1.0,
                                 child: WeatherConfiguration.allScenes[i],
                               ),
                             ),
@@ -322,6 +332,68 @@ class AddMyDairyScreen extends HookConsumerWidget {
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildSelectedWeatherAndEmoji(
+    int weatherIndex,
+    int emojiIndex,
+    TextEditingController controller1,
+    TextEditingController controller2,
+    TextEditingController controller3,
+  ) {
+    return Form(
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          Transform.scale(
+            scale: 1.1,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: WeatherConfiguration.allScenes[weatherIndex],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: ListTile(
+              leading: AnimatedEmoji(
+                getEmoji(emojiIndex),
+                size: 40,
+              ),
+              title: DiaryTextFormField(
+                controller: controller1,
+                height: 30,
+                hintText: '오늘 하루는 어떠신가요?',
+                maxLines: 1,
+                textSize: 17,
+              ),
+              subtitle: DiaryTextFormField(
+                controller: controller2,
+                height: 30,
+                hintText: '어떤 기분을 갖고 계신가요?',
+                maxLines: 1,
+                textSize: 15,
+              ),
+            ),
+          ),
+          Transform.translate(
+            offset: const Offset(0, 80),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: ListTile(
+                title: DiaryTextFormField(
+                  controller: controller3,
+                  textInputType: TextInputType.multiline,
+                  height: 450,
+                  hintText: '자유롭게 일기를 적어주세요!',
+                  textSize: 20,
+                  maxLines: 10,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -359,70 +431,105 @@ class AddMyDairyScreen extends HookConsumerWidget {
     return null;
   }
 
-  Widget? getWeatherLabel(int index) {
+  String? getWeatherLable(int index) {
     switch (index) {
       case 0:
-        return WeatherConfiguration.sunnyMorning;
+        return 'WeatherConfiguration.sunnyMorning';
       case 1:
-        return WeatherConfiguration.sunnyEvening;
+        return 'WeatherConfiguration.sunnyEvening';
       case 2:
-        return WeatherConfiguration.rainyMorning;
+        return 'WeatherConfiguration.rainyMorning';
       case 3:
-        return WeatherConfiguration.rainyEvening;
+        return 'WeatherConfiguration.rainyEvening';
     }
     return null;
   }
 }
 
-class EmojiButton extends StatelessWidget {
-  final int index;
-  final bool isSelected;
-  final double screenWidth;
-  final double screenHeight;
-  final double emojiSpacing;
-  final Animation<double> emojiOpacity;
-  final VoidCallback onMoodTap;
-  final int? selectedEmojiIndex;
-  final AnimatedEmojiData Function(int) getEmoji;
+Widget? getWeather(int index) {
+  switch (index) {
+    case 0:
+      return WeatherConfiguration.sunnyMorning;
+    case 1:
+      return WeatherConfiguration.sunnyEvening;
+    case 2:
+      return WeatherConfiguration.rainyMorning;
+    case 3:
+      return WeatherConfiguration.rainyEvening;
+  }
+  return null;
+}
 
-  const EmojiButton({
-    required this.index,
-    required this.isSelected,
-    required this.screenWidth,
-    required this.screenHeight,
-    required this.emojiSpacing,
-    required this.emojiOpacity,
-    required this.onMoodTap,
-    required this.selectedEmojiIndex,
-    required this.getEmoji,
+class DiaryTextFormField extends StatelessWidget {
+  final String hintText;
+  final double height;
+  final double textSize;
+  final bool isExpandable;
+  final int? maxLength;
+  final int? maxLines;
+  final TextInputType textInputType;
+  final TextEditingController controller;
+
+  const DiaryTextFormField({
     super.key,
+    required this.hintText,
+    required this.height,
+    required this.textSize,
+    this.isExpandable = false,
+    this.textInputType = TextInputType.text,
+    this.maxLength,
+    this.maxLines,
+    required this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedPositioned(
-      curve: Curves.easeInOut,
-      duration: const Duration(milliseconds: 700),
-      left: isSelected
-          ? (screenWidth / 2 - 25)
-          : emojiSpacing + index * (50.0 + emojiSpacing),
-      top: isSelected ? (screenHeight / 2 - 25) : screenHeight / 2 - 25,
-      child: AnimatedScale(
-        curve: Curves.easeOutCirc,
-        duration: const Duration(seconds: 2),
-        scale: isSelected ? 1.8 : 1,
-        child: AnimatedOpacity(
-          duration: const Duration(milliseconds: 500),
-          opacity: selectedEmojiIndex != null && !isSelected
-              ? 0.0
-              : emojiOpacity.value,
-          child: GestureDetector(
-            onTap: onMoodTap,
-            child: AnimatedEmoji(
-              getEmoji(index),
-              size: 50,
+    return SizedBox(
+      height: height,
+      child: TextFormField(
+        controller: controller,
+        minLines: null,
+        maxLines: maxLines,
+        maxLength: maxLength,
+        keyboardType: textInputType,
+        clipBehavior: Clip.none,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(
+            color: Colors.grey.shade100,
+            fontSize: textSize,
+            shadows: const [
+              Shadow(
+                blurRadius: 30,
+              )
+            ],
+          ),
+          fillColor: Colors.transparent,
+          border: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.transparent,
             ),
           ),
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.transparent,
+            ),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.transparent,
+            ),
+          ),
+          contentPadding: EdgeInsets.zero,
+        ),
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: textSize,
+          shadows: const [
+            Shadow(
+              blurRadius: 30,
+            )
+          ],
         ),
       ),
     );
