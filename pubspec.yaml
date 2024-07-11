@@ -64,6 +64,8 @@ dependencies:
   animations: ^2.0.11
   local_hero: ^0.3.0
 
+  flutter_riverpod: any
+  card_swiper: ^3.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

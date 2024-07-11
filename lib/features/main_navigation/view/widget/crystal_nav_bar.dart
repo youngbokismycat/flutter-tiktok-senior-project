@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:crystal_navigation_bar/crystal_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_senior_project/core/utils/is_dark_mode.dart';
 import 'package:flutter_senior_project/features/main_navigation/view/widget/nav_button.dart';

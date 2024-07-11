@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_senior_project/core/config/app_config.dart';
 import 'package:flutter_senior_project/core/firebase/firebase_options.dart';
 import 'package:flutter_senior_project/core/router/router.dart';

@@ -1,18 +1,12 @@
-import 'package:animate_gradient/animate_gradient.dart';
 import 'package:animated_emoji/emoji.dart';
 import 'package:animated_emoji/emojis.g.dart';
-import 'package:faker/faker.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:weather_animation/weather_animation.dart';
 
 import 'package:flutter_senior_project/core/config/wheather_config.dart';
 import 'package:flutter_senior_project/core/router/route_names.dart';
-import 'package:flutter_senior_project/features/common/widget/logo_gradient.dart';
 
 class DiaryCard extends HookConsumerWidget {
   const DiaryCard({

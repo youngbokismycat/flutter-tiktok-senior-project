@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_senior_project/core/utils/is_dark_mode.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:weather_animation/weather_animation.dart';
 
 const CloudWidget bigCloudWidget = CloudWidget(
@@ -110,7 +107,11 @@ abstract class WeatherConfiguration {
       Color(0xffCFD8DC), // Pale grey for rain effect
     ],
     children: [
-      RainWidget(),
+      RainWidget(
+        rainConfig: RainConfig(
+          areaYStart: 170,
+        ),
+      ),
       bigCloudWidget,
       smallCloudWidget,
     ],
@@ -174,4 +175,31 @@ abstract class WeatherConfiguration {
       ),
     ],
   );
+
+  static List<Widget> get allScenes => [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(
+            24,
+          ),
+          child: sunnyMorning,
+        ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(
+            24,
+          ),
+          child: sunnyEvening,
+        ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(
+            24,
+          ),
+          child: rainyMorning,
+        ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(
+            24,
+          ),
+          child: rainyEvening,
+        ),
+      ];
 }
