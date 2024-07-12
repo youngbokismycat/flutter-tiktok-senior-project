@@ -68,6 +68,13 @@ class DetailDiaryCardScreen extends HookConsumerWidget {
                               color: Colors.white,
                             ),
                           ),
+                          trailing: Text(
+                            "${post.getElapsedTime()} 전",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
                       ),
                       Transform.translate(

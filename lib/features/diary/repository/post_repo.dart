@@ -16,10 +16,23 @@ class PostRepository {
 
   Future<List<Post>> fetchPosts() async {
     try {
-      final querySnapshot = await _firestore.collection('posts').get();
-      return querySnapshot.docs.map((doc) => Post.fromMap(doc.data())).toList();
+      final querySnapshot = await _firestore
+          .collection('posts')
+          .orderBy('createAt', descending: true)
+          .get();
+      return querySnapshot.docs.map((doc) {
+        return Post.fromMap(doc.data()).copyWith(id: doc.id);
+      }).toList();
     } catch (e) {
       throw Exception('Error fetching posts: $e');
+    }
+  }
+
+  Future<void> deletePost(String postId) async {
+    try {
+      await _firestore.collection('posts').doc(postId).delete();
+    } catch (e) {
+      throw Exception('Error deleting post: $e');
     }
   }
 }

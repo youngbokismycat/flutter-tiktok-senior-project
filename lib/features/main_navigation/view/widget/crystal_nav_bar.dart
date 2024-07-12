@@ -27,7 +27,7 @@ class CrystalNavBar extends HookConsumerWidget {
           borderRadius: BorderRadius.circular(30),
           child: BackdropFilter(
             blendMode: BlendMode.src,
-            filter: ImageFilter.blur(sigmaY: 1, sigmaX: 1),
+            filter: ImageFilter.blur(sigmaY: 3, sigmaX: 3),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               width: double.infinity,

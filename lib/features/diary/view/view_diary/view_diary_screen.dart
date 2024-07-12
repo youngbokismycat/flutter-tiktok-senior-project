@@ -117,7 +117,7 @@ class Diaries extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      padding: const EdgeInsets.only(top: 0),
+      padding: const EdgeInsets.only(top: 0, bottom: 100),
       physics: const NeverScrollableScrollPhysics(),
       itemCount: posts.length,
       shrinkWrap: true,
