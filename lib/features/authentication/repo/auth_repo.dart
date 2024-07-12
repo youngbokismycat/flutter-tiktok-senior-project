@@ -22,9 +22,14 @@ class AuthRepository {
     await _firebaseAuth.signOut();
   }
 
+  bool get isLoggedIn => currentUser != null;
   User? get currentUser => _firebaseAuth.currentUser;
 }
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepository(FirebaseAuth.instance);
 });
+
+final authState = StreamProvider(
+  (ref) => ref.read(authRepositoryProvider).authStateChanges,
+);

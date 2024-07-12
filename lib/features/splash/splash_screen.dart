@@ -1,6 +1,7 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_senior_project/core/router/route_names.dart';
+import 'package:flutter_senior_project/features/authentication/repo/auth_repo.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -62,19 +63,12 @@ class SplashScreenState extends ConsumerState<SplashScreen>
           _opacity = 0.0;
         });
         Future.delayed(const Duration(milliseconds: 500), () {
+          final isLoggedIn = ref.read(authRepositoryProvider).isLoggedIn;
           if (mounted) {
-            if (widget.action == 'signIn') {
-              context.goNamed(
-                RouteNames.home,
-              );
-            } else if (widget.action == 'signUp') {
-              context.goNamed(
-                RouteNames.onboarding,
-              );
+            if (isLoggedIn) {
+              context.go(RouteNames.onboardingUrl);
             } else {
-              context.goNamed(
-                RouteNames.signIn,
-              );
+              context.go(RouteNames.signInUrl);
             }
           }
         });

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_senior_project/core/router/route_names.dart';
+import 'package:flutter_senior_project/features/authentication/repo/auth_repo.dart';
 import 'package:flutter_senior_project/features/authentication/view/signin_screen.dart';
 import 'package:flutter_senior_project/features/authentication/view/signup_screen.dart';
 import 'package:flutter_senior_project/features/diary/view/detail_diary/detail_diary_card_screen.dart';
@@ -12,8 +13,21 @@ import 'package:go_router/go_router.dart';
 
 final routerProvider = Provider<GoRouter>(
   (ref) {
+    ref.watch(authState);
+
     return GoRouter(
-      initialLocation: RouteNames.homeUrl,
+      initialLocation: RouteNames.logoSplashUrl,
+      redirect: (context, state) {
+        final isLoggedIn = ref.read(authRepositoryProvider).isLoggedIn;
+        if (!isLoggedIn) {
+          if (state.matchedLocation != RouteNames.signInUrl &&
+              state.matchedLocation != RouteNames.signUpUrl &&
+              state.matchedLocation != RouteNames.logoSplashUrl) {
+            return RouteNames.logoSplashUrl;
+          }
+        }
+        return null;
+      },
       routes: [
         GoRoute(
           name: RouteNames.logoSplash,
