@@ -121,7 +121,7 @@ class Diaries extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: posts.length,
       shrinkWrap: true,
-      separatorBuilder: (context, index) => const Gap(10),
+      separatorBuilder: (context, index) => const Gap(30),
       itemBuilder: (context, index) =>
           DiaryCard(post: posts[index], index: index),
     );

@@ -3,6 +3,7 @@ import 'package:flutter_senior_project/core/router/route_names.dart';
 import 'package:flutter_senior_project/features/authentication/repo/auth_repo.dart';
 import 'package:flutter_senior_project/features/authentication/view/signin_screen.dart';
 import 'package:flutter_senior_project/features/authentication/view/signup_screen.dart';
+import 'package:flutter_senior_project/features/diary/model/post_model.dart';
 import 'package:flutter_senior_project/features/diary/view/detail_diary/detail_diary_card_screen.dart';
 import 'package:flutter_senior_project/features/onboarding/onboarding_screen.dart';
 import 'package:flutter_senior_project/features/settings/settings_screen.dart';
@@ -70,15 +71,17 @@ final routerProvider = Provider<GoRouter>(
           ),
         ),
         GoRoute(
-          name: RouteNames.detailDiary,
-          path: RouteNames.detailDiaryUrl,
-          pageBuilder: (context, state) => transitionPage(
-            state,
-            DetailDiaryCardScreen(
-              index: state.extra as int,
-            ),
-          ),
-        ),
+            name: RouteNames.detailDiary,
+            path: RouteNames.detailDiaryUrl,
+            pageBuilder: (context, state) {
+              final post = state.extra as Post;
+              return transitionPage(
+                state,
+                DetailDiaryCardScreen(
+                  post: post,
+                ),
+              );
+            }),
         GoRoute(
           name: RouteNames.settings,
           path: RouteNames.settingsUrl,

@@ -1,14 +1,15 @@
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:animated_emoji/emoji.dart';
-import 'package:animated_emoji/emoji_data.dart';
 import 'package:animated_emoji/emojis.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_senior_project/features/diary/model/post_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:flutter_senior_project/core/config/wheather_config.dart';
 import 'package:flutter_senior_project/core/router/route_names.dart';
+
+import '../../../model/post_model.dart';
 
 class DiaryCard extends HookConsumerWidget {
   const DiaryCard({
@@ -23,7 +24,7 @@ class DiaryCard extends HookConsumerWidget {
   void _onCardTap(BuildContext context) {
     context.pushNamed(
       RouteNames.detailDiary,
-      extra: index,
+      extra: post,
     );
   }
 
@@ -45,7 +46,8 @@ class DiaryCard extends HookConsumerWidget {
         child: SizedBox(
           height: 100,
           child: Hero(
-            tag: '$index',
+            tag:
+                'diary_${post.createAt}_${post.hashCode}', // Updated tag to match DetailDiaryCardScreen
             child: Transform.translate(
               offset: const Offset(0, 15),
               child: Material(
