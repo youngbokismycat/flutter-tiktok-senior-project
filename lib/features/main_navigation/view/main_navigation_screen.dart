@@ -14,8 +14,8 @@ class MainNavigation extends HookConsumerWidget {
     final selectedIndex = ref.watch(bottomNavigationProvider);
     final opacity = ref.watch(opacityProvider);
     final List<Widget> screens = [
-      const ViewMyDairyScreen(),
-      const AddMyDairyScreen(),
+      const ViewMyDiaryScreen(),
+      const AddMyDiaryScreen(),
     ];
 
     return Scaffold(

@@ -2,16 +2,17 @@ import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_senior_project/features/diary/view/add_diary/widget/emoji_button.dart';
+import 'package:flutter_senior_project/features/diary/model/post_model.dart';
+import 'package:flutter_senior_project/features/diary/vm/post_vm.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_senior_project/core/config/wheather_config.dart';
 import 'package:flutter_senior_project/core/theme/text_theme.dart';
+import 'package:flutter_senior_project/features/diary/view/add_diary/widget/emoji_button.dart';
 import 'package:flutter_senior_project/features/common/widget/custom_animate_gradient.dart';
-import 'dart:convert';
 
-class AddMyDairyScreen extends HookConsumerWidget {
-  const AddMyDairyScreen({super.key});
+class AddMyDiaryScreen extends HookConsumerWidget {
+  const AddMyDiaryScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,9 +31,10 @@ class AddMyDairyScreen extends HookConsumerWidget {
     final selectedEmojiIndex = useState<int?>(null);
     final selectedWeatherIndex = useState<int?>(null);
 
-    final TextEditingController controller1 = useTextEditingController();
-    final TextEditingController controller2 = useTextEditingController();
-    final TextEditingController controller3 = useTextEditingController();
+    final TextEditingController titleController = useTextEditingController();
+    final TextEditingController subtitleController = useTextEditingController();
+    final TextEditingController diaryEntryController =
+        useTextEditingController();
 
     final isButtonEnabled = useState(false);
 
@@ -50,21 +52,21 @@ class AddMyDairyScreen extends HookConsumerWidget {
 
     useEffect(() {
       void listener() {
-        isButtonEnabled.value = controller1.text.isNotEmpty &&
-            controller2.text.isNotEmpty &&
-            controller3.text.isNotEmpty;
+        isButtonEnabled.value = titleController.text.isNotEmpty &&
+            subtitleController.text.isNotEmpty &&
+            diaryEntryController.text.isNotEmpty;
       }
 
-      controller1.addListener(listener);
-      controller2.addListener(listener);
-      controller3.addListener(listener);
+      titleController.addListener(listener);
+      subtitleController.addListener(listener);
+      diaryEntryController.addListener(listener);
 
       return () {
-        controller1.removeListener(listener);
-        controller2.removeListener(listener);
-        controller3.removeListener(listener);
+        titleController.removeListener(listener);
+        subtitleController.removeListener(listener);
+        diaryEntryController.removeListener(listener);
       };
-    }, [controller1, controller2, controller3]);
+    }, [titleController, subtitleController, diaryEntryController]);
 
     void onMoodTap(int index) async {
       selectedEmojiIndex.value = index;
@@ -133,19 +135,17 @@ class AddMyDairyScreen extends HookConsumerWidget {
     }, [animationController]);
 
     void onSubmit() async {
-      /*     final postData = {
-        'selectedEmoji': getLabel(selectedEmojiIndex.value!),
-        'selectedWeather': getWeatherLable(
-          selectedWeatherIndex.value!,
-        ),
-        'title': controller1.text,
-        'subtitle': controller2.text,
-        'diaryEntry': controller3.text,
-      }; */
-      isButtonEnabled.value = false;
-      isButtonEnabled.value = false;
-      isButtonEnabled.value = false;
-      isButtonEnabled.value = false;
+      final post = Post(
+        selectedEmoji: getLabel(selectedEmojiIndex.value!)!,
+        selectedWeather: getWeatherLabel(selectedWeatherIndex.value!)!,
+        title: titleController.text,
+        subtitle: subtitleController.text,
+        diaryEntry: diaryEntryController.text,
+        createAt: DateTime.now().millisecondsSinceEpoch.toDouble(),
+      );
+
+      ref.read(addPostViewModelProvider.notifier).addPost(post);
+
       isButtonEnabled.value = false;
       FocusScope.of(context).unfocus();
       await Future.delayed(
@@ -213,9 +213,9 @@ class AddMyDairyScreen extends HookConsumerWidget {
                                 selectedWeatherIndex.value!,
                                 shouldSubmit.value,
                                 selectedEmojiIndex.value!,
-                                controller1,
-                                controller2,
-                                controller3,
+                                titleController,
+                                subtitleController,
+                                diaryEntryController,
                               )
                             : const SizedBox(),
                       ),
@@ -385,9 +385,9 @@ class AddMyDairyScreen extends HookConsumerWidget {
     int weatherIndex,
     bool shouldSubmit,
     int emojiIndex,
-    TextEditingController controller1,
-    TextEditingController controller2,
-    TextEditingController controller3,
+    TextEditingController titleController,
+    TextEditingController subtitleController,
+    TextEditingController diaryEntryController,
   ) {
     return Form(
       child: Stack(
@@ -413,14 +413,14 @@ class AddMyDairyScreen extends HookConsumerWidget {
                   size: 40,
                 ),
                 title: DiaryTextFormField(
-                  controller: controller1,
+                  controller: titleController,
                   height: 30,
                   hintText: '오늘 하루는 어떠신가요?',
                   maxLines: 1,
                   textSize: 17,
                 ),
                 subtitle: DiaryTextFormField(
-                  controller: controller2,
+                  controller: subtitleController,
                   height: 30,
                   hintText: '어떤 기분을 갖고 계신가요?',
                   maxLines: 1,
@@ -440,7 +440,7 @@ class AddMyDairyScreen extends HookConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: ListTile(
                   title: DiaryTextFormField(
-                    controller: controller3,
+                    controller: diaryEntryController,
                     textInputType: TextInputType.multiline,
                     height: 450,
                     hintText: '자유롭게 일기를 적어주세요!',
@@ -489,7 +489,7 @@ class AddMyDairyScreen extends HookConsumerWidget {
     return null;
   }
 
-  String? getWeatherLable(int index) {
+  String? getWeatherLabel(int index) {
     switch (index) {
       case 0:
         return 'WeatherConfiguration.sunnyMorning';

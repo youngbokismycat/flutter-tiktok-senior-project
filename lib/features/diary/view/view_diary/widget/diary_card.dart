@@ -1,7 +1,9 @@
 import 'package:animated_emoji/emoji.dart';
+import 'package:animated_emoji/emoji_data.dart';
 import 'package:animated_emoji/emojis.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_senior_project/features/diary/model/post_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -12,8 +14,11 @@ class DiaryCard extends HookConsumerWidget {
   const DiaryCard({
     super.key,
     required this.index,
+    required this.post,
   });
+
   final int index;
+  final Post post;
 
   void _onCardTap(BuildContext context) {
     context.pushNamed(
@@ -25,6 +30,8 @@ class DiaryCard extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scale = useState(1.0);
+    final weatherWidget = getWeatherWidget(post.selectedWeather);
+    final emoji = getEmoji(post.selectedEmoji);
 
     return GestureDetector(
       onTap: () => _onCardTap(context),
@@ -40,10 +47,7 @@ class DiaryCard extends HookConsumerWidget {
           child: Hero(
             tag: '$index',
             child: Transform.translate(
-              offset: const Offset(
-                0,
-                15,
-              ),
+              offset: const Offset(0, 15),
               child: Material(
                 color: Colors.transparent,
                 child: Stack(
@@ -53,28 +57,26 @@ class DiaryCard extends HookConsumerWidget {
                       scale: 1.1,
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(24),
-                          child: WeatherConfiguration.rainyEvening),
+                          child: weatherWidget),
                     ),
                     Transform.translate(
                       offset: const Offset(0, 13),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 25.0,
-                        ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: ListTile(
                           leading: AnimatedEmoji(
-                            AnimatedEmojis.sad,
+                            emoji,
                             size: 32,
                           ),
                           title: Text(
-                            '오늘 너무 슬펐다.',
-                            style: TextStyle(
+                            post.title,
+                            style: const TextStyle(
                               color: Colors.white,
                             ),
                           ),
                           subtitle: Text(
-                            '그냥 슬펐다.',
-                            style: TextStyle(
+                            post.subtitle,
+                            style: const TextStyle(
                               color: Colors.white,
                             ),
                           ),
@@ -89,5 +91,37 @@ class DiaryCard extends HookConsumerWidget {
         ),
       ),
     );
+  }
+
+  AnimatedEmojiData getEmoji(String emojiLabel) {
+    switch (emojiLabel) {
+      case 'Heart Eyes':
+        return AnimatedEmojis.heartEyes;
+      case 'Warm Smile':
+        return AnimatedEmojis.warmSmile;
+      case 'Slightly Happy':
+        return AnimatedEmojis.slightlyHappy;
+      case 'Sad':
+        return AnimatedEmojis.sad;
+      case 'Angry':
+        return AnimatedEmojis.angry;
+      default:
+        return AnimatedEmojis.heartEyes;
+    }
+  }
+
+  Widget getWeatherWidget(String weatherLabel) {
+    switch (weatherLabel) {
+      case 'WeatherConfiguration.sunnyMorning':
+        return WeatherConfiguration.sunnyMorning;
+      case 'WeatherConfiguration.sunnyEvening':
+        return WeatherConfiguration.sunnyEvening;
+      case 'WeatherConfiguration.rainyMorning':
+        return WeatherConfiguration.rainyMorning;
+      case 'WeatherConfiguration.rainyEvening':
+        return WeatherConfiguration.rainyEvening;
+      default:
+        return WeatherConfiguration.sunnyMorning;
+    }
   }
 }

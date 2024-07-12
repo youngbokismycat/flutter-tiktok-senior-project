@@ -6,21 +6,20 @@ import 'package:flutter_senior_project/features/diary/repository/post_repo.dart'
 final postRepositoryProvider =
     Provider((ref) => PostRepository(FirebaseFirestore.instance));
 
-final addPostViewModelProvider =
-    StateNotifierProvider<AddPostViewModel, AsyncValue<void>>((ref) {
-  return AddPostViewModel(ref.read(postRepositoryProvider));
+final fetchPostsViewModelProvider =
+    StateNotifierProvider<FetchPostsViewModel, AsyncValue<List<Post>>>((ref) {
+  return FetchPostsViewModel(ref.read(postRepositoryProvider));
 });
 
-class AddPostViewModel extends StateNotifier<AsyncValue<void>> {
+class FetchPostsViewModel extends StateNotifier<AsyncValue<List<Post>>> {
   final PostRepository _postRepository;
 
-  AddPostViewModel(this._postRepository) : super(const AsyncValue.data(null));
+  FetchPostsViewModel(this._postRepository) : super(const AsyncValue.loading());
 
-  Future<void> addPost(Post post) async {
-    state = const AsyncValue.loading();
+  Future<void> fetchPosts() async {
     try {
-      await _postRepository.addPost(post);
-      state = const AsyncValue.data(null);
+      final posts = await _postRepository.fetchPosts();
+      state = AsyncValue.data(posts);
     } catch (e, stackTrace) {
       state = AsyncValue.error(e, stackTrace);
     }

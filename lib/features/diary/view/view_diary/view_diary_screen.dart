@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:draggable_home/draggable_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_senior_project/features/diary/model/post_model.dart';
+import 'package:flutter_senior_project/features/diary/vm/fetch_post_vm.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -16,14 +18,14 @@ import 'package:flutter_senior_project/features/common/widget/custom_shader.dart
 import 'package:flutter_senior_project/features/diary/view/add_diary/add_my_dairy_screen.dart';
 import 'package:flutter_senior_project/features/diary/view/view_diary/widget/diary_card.dart';
 
-class ViewMyDairyScreen extends StatefulHookConsumerWidget {
-  const ViewMyDairyScreen({super.key});
+class ViewMyDiaryScreen extends StatefulHookConsumerWidget {
+  const ViewMyDiaryScreen({super.key});
 
   @override
-  ViewMyDairyScreenState createState() => ViewMyDairyScreenState();
+  ViewMyDiaryScreenState createState() => ViewMyDiaryScreenState();
 }
 
-class ViewMyDairyScreenState extends ConsumerState<ViewMyDairyScreen> {
+class ViewMyDiaryScreenState extends ConsumerState<ViewMyDiaryScreen> {
   void onGearsTap(
     BuildContext context,
     ValueNotifier<double> opacity,
@@ -36,12 +38,19 @@ class ViewMyDairyScreenState extends ConsumerState<ViewMyDairyScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    Future.microtask(
+        () => ref.read(fetchPostsViewModelProvider.notifier).fetchPosts());
+  }
+
+  @override
   Widget build(BuildContext context) {
     final opacity = useState(1.0);
+    final postsState = ref.watch(fetchPostsViewModelProvider);
+
     return AnimatedOpacity(
-      duration: const Duration(
-        milliseconds: 300,
-      ),
+      duration: const Duration(milliseconds: 300),
       opacity: opacity.value,
       child: DraggableHome(
         headerBottomBar: Gear(
@@ -60,8 +69,12 @@ class ViewMyDairyScreenState extends ConsumerState<ViewMyDairyScreen> {
           ),
         ),
         headerWidget: const HeaderWidget(),
-        body: const [
-          Diaries(),
+        body: [
+          postsState.when(
+            data: (posts) => Diaries(posts: posts),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, _) => Center(child: Text('Error: $error')),
+          ),
         ],
       ),
     );
@@ -96,17 +109,21 @@ class Gear extends StatelessWidget {
 class Diaries extends StatelessWidget {
   const Diaries({
     super.key,
+    required this.posts,
   });
+
+  final List<Post> posts;
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
       padding: const EdgeInsets.only(top: 0),
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: 1,
+      itemCount: posts.length,
       shrinkWrap: true,
       separatorBuilder: (context, index) => const Gap(10),
-      itemBuilder: (context, index) => DiaryCard(index: index),
+      itemBuilder: (context, index) =>
+          DiaryCard(post: posts[index], index: index),
     );
   }
 }
