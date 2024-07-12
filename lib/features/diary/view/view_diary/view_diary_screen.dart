@@ -48,8 +48,6 @@ class ViewMyDairyScreenState extends ConsumerState<ViewMyDairyScreen> {
           ref: ref,
           onTap: () => onGearsTap(context, opacity),
         ),
-        expandedBody: const AddMyDairyScreen(),
-        fullyStretchable: true,
         backgroundColor: isDarkMode(ref)
             ? const Color.fromARGB(255, 35, 35, 35)
             : Colors.white,
@@ -84,11 +82,11 @@ class Gear extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Align(
+      child: const Align(
         alignment: Alignment.centerRight,
         child: FaIcon(
           FontAwesomeIcons.gear,
-          color: isDarkMode(ref) ? darkModeColor : Colors.white,
+          color: Colors.white,
         ),
       ),
     );

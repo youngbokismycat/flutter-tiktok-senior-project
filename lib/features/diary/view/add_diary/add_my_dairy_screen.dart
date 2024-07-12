@@ -1,4 +1,5 @@
 import 'package:animated_emoji/animated_emoji.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_senior_project/features/diary/view/add_diary/widget/emoji_button.dart';
@@ -23,6 +24,8 @@ class AddMyDairyScreen extends HookConsumerWidget {
     );
     final isStartSelectWeather = useState(false);
     final shouldVisibleCards = useState(false);
+    final shouldSubmit = useState(false);
+    final shouldSlide = useState(false);
     final shouldVisibleSelectedCards = useState(false);
     final selectedEmojiIndex = useState<int?>(null);
     final selectedWeatherIndex = useState<int?>(null);
@@ -129,7 +132,39 @@ class AddMyDairyScreen extends HookConsumerWidget {
       });
     }, [animationController]);
 
+    void onSubmit() async {
+      /*     final postData = {
+        'selectedEmoji': getLabel(selectedEmojiIndex.value!),
+        'selectedWeather': getWeatherLable(
+          selectedWeatherIndex.value!,
+        ),
+        'title': controller1.text,
+        'subtitle': controller2.text,
+        'diaryEntry': controller3.text,
+      }; */
+      isButtonEnabled.value = false;
+      isButtonEnabled.value = false;
+      isButtonEnabled.value = false;
+      isButtonEnabled.value = false;
+      isButtonEnabled.value = false;
+      FocusScope.of(context).unfocus();
+      await Future.delayed(
+        const Duration(
+          seconds: 1,
+        ),
+      );
+      shouldSubmit.value = true;
+      isButtonEnabled.value = false;
+      await Future.delayed(
+          const Duration(
+            seconds: 1,
+          ), () {
+        shouldSlide.value = true;
+      });
+    }
+
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       extendBody: true,
       body: CustomAnimateGradient(
         child: Center(
@@ -159,41 +194,51 @@ class AddMyDairyScreen extends HookConsumerWidget {
                     onWeatherTap,
                     weatherAnimationController,
                   ),
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    child: shouldVisibleSelectedCards.value
-                        ? _buildSelectedWeatherAndEmoji(
-                            selectedWeatherIndex.value!,
-                            selectedEmojiIndex.value!,
-                            controller1,
-                            controller2,
-                            controller3,
-                          )
-                        : const SizedBox(),
-                  ),
-                  Positioned(
-                    bottom: 20,
-                    right: 20,
-                    child: ElevatedButton(
-                      onPressed: isButtonEnabled.value
-                          ? () {
-                              final postData = {
-                                'selectedEmoji':
-                                    getLabel(selectedEmojiIndex.value!),
-                                'selectedWeather': getWeatherLable(
-                                  selectedWeatherIndex.value!,
-                                ),
-                                'title': controller1.text,
-                                'subtitle': controller2.text,
-                                'diaryEntry': controller3.text,
-                              };
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  content: Text(
-                                      'Data saved: ${jsonEncode(postData)}')));
-                            }
-                          : null,
-                      child: const Text('Complete'),
+                  AnimatedSlide(
+                    duration: const Duration(
+                      seconds: 1,
                     ),
+                    curve: Curves.easeInQuint,
+                    offset: Offset(shouldSlide.value ? -1 : 0, 0),
+                    child: AnimatedContainer(
+                      duration: const Duration(
+                        seconds: 1,
+                      ),
+                      curve: Curves.decelerate,
+                      height: shouldSubmit.value ? 100 : 550,
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 500),
+                        child: shouldVisibleSelectedCards.value
+                            ? _buildSelectedWeatherAndEmoji(
+                                selectedWeatherIndex.value!,
+                                shouldSubmit.value,
+                                selectedEmojiIndex.value!,
+                                controller1,
+                                controller2,
+                                controller3,
+                              )
+                            : const SizedBox(),
+                      ),
+                    ),
+                  ),
+                  AnimatedPositioned(
+                    duration: const Duration(
+                      seconds: 2,
+                    ),
+                    curve: Curves.easeOutCirc,
+                    top: isButtonEnabled.value ? -170 : -300,
+                    right: 20,
+                    child: HookBuilder(builder: (context) {
+                      return Column(
+                        children: [
+                          const TwoString(),
+                          ElevatedButton(
+                            onPressed: () => onSubmit(),
+                            child: const Text('다 썼어요!'),
+                          ),
+                        ],
+                      );
+                    }),
                   ),
                 ],
               );
@@ -338,6 +383,7 @@ class AddMyDairyScreen extends HookConsumerWidget {
 
   Widget _buildSelectedWeatherAndEmoji(
     int weatherIndex,
+    bool shouldSubmit,
     int emojiIndex,
     TextEditingController controller1,
     TextEditingController controller2,
@@ -356,39 +402,51 @@ class AddMyDairyScreen extends HookConsumerWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: ListTile(
-              leading: AnimatedEmoji(
-                getEmoji(emojiIndex),
-                size: 40,
+            child: Transform.translate(
+              offset: Offset(
+                0,
+                shouldSubmit ? 13 : 0,
               ),
-              title: DiaryTextFormField(
-                controller: controller1,
-                height: 30,
-                hintText: '오늘 하루는 어떠신가요?',
-                maxLines: 1,
-                textSize: 17,
-              ),
-              subtitle: DiaryTextFormField(
-                controller: controller2,
-                height: 30,
-                hintText: '어떤 기분을 갖고 계신가요?',
-                maxLines: 1,
-                textSize: 15,
+              child: ListTile(
+                leading: AnimatedEmoji(
+                  getEmoji(emojiIndex),
+                  size: 40,
+                ),
+                title: DiaryTextFormField(
+                  controller: controller1,
+                  height: 30,
+                  hintText: '오늘 하루는 어떠신가요?',
+                  maxLines: 1,
+                  textSize: 17,
+                ),
+                subtitle: DiaryTextFormField(
+                  controller: controller2,
+                  height: 30,
+                  hintText: '어떤 기분을 갖고 계신가요?',
+                  maxLines: 1,
+                  textSize: 15,
+                ),
               ),
             ),
           ),
-          Transform.translate(
-            offset: const Offset(0, 80),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: ListTile(
-                title: DiaryTextFormField(
-                  controller: controller3,
-                  textInputType: TextInputType.multiline,
-                  height: 450,
-                  hintText: '자유롭게 일기를 적어주세요!',
-                  textSize: 20,
-                  maxLines: 10,
+          AnimatedOpacity(
+            duration: const Duration(
+              milliseconds: 200,
+            ),
+            opacity: shouldSubmit ? 0 : 1,
+            child: Transform.translate(
+              offset: const Offset(0, 80),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: ListTile(
+                  title: DiaryTextFormField(
+                    controller: controller3,
+                    textInputType: TextInputType.multiline,
+                    height: 450,
+                    hintText: '자유롭게 일기를 적어주세요!',
+                    textSize: 20,
+                    maxLines: 10,
+                  ),
                 ),
               ),
             ),
@@ -443,6 +501,37 @@ class AddMyDairyScreen extends HookConsumerWidget {
         return 'WeatherConfiguration.rainyEvening';
     }
     return null;
+  }
+}
+
+class TwoString extends StatelessWidget {
+  const TwoString({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Transform.translate(
+          offset: const Offset(30, 30),
+          child: Container(
+            width: 3,
+            height: 250,
+            color: Colors.brown.shade900,
+          ),
+        ),
+        Transform.translate(
+          offset: const Offset(-30, 30),
+          child: Container(
+            width: 3,
+            height: 250,
+            color: Colors.brown.shade900,
+          ),
+        ),
+      ],
+    );
   }
 }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_senior_project/features/diary/view/add_diary/add_my_dairy_screen.dart';
 import 'package:flutter_senior_project/features/diary/view/analysis_diary/anaysis_my_dairy_screen.dart';
 import 'package:flutter_senior_project/features/main_navigation/view/widget/crystal_nav_bar.dart';
 import 'package:flutter_senior_project/features/main_navigation/vm/bottom_nav_vm.dart';
@@ -14,10 +15,11 @@ class MainNavigation extends HookConsumerWidget {
     final opacity = ref.watch(opacityProvider);
     final List<Widget> screens = [
       const ViewMyDairyScreen(),
-      const AnalysisMyDairyScreen(),
+      const AddMyDairyScreen(),
     ];
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           AnimatedOpacity(
