@@ -1,9 +1,13 @@
 import 'dart:io';
 
 import 'package:draggable_home/draggable_home.dart';
+import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_senior_project/features/diary/model/post_model.dart';
+import 'package:flutter_senior_project/features/diary/view/view_diary/widget/gear.dart';
+import 'package:flutter_senior_project/features/diary/view/view_diary/widget/main_header_logo.dart';
+import 'package:flutter_senior_project/features/diary/view/view_diary/widget/skeleton_card.dart';
 import 'package:flutter_senior_project/features/diary/vm/fetch_post_vm.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
@@ -17,6 +21,7 @@ import 'package:flutter_senior_project/features/common/widget/custom_animate_gra
 import 'package:flutter_senior_project/features/common/widget/custom_shader.dart';
 import 'package:flutter_senior_project/features/diary/view/add_diary/add_my_dairy_screen.dart';
 import 'package:flutter_senior_project/features/diary/view/view_diary/widget/diary_card.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ViewMyDiaryScreen extends StatefulHookConsumerWidget {
   const ViewMyDiaryScreen({super.key});
@@ -68,102 +73,15 @@ class ViewMyDiaryScreenState extends ConsumerState<ViewMyDiaryScreen> {
             ),
           ),
         ),
-        headerWidget: const HeaderWidget(),
+        headerWidget: const MainHeaderLogo(),
         body: [
           postsState.when(
             data: (posts) => Diaries(posts: posts),
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const SkeletonLoader(),
             error: (error, _) => Center(child: Text('Error: $error')),
           ),
         ],
       ),
     );
-  }
-}
-
-class Gear extends StatelessWidget {
-  final Function() onTap;
-  const Gear({
-    super.key,
-    required this.onTap,
-    required this.ref,
-  });
-
-  final WidgetRef ref;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: const Align(
-        alignment: Alignment.centerRight,
-        child: FaIcon(
-          FontAwesomeIcons.gear,
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
-}
-
-class Diaries extends StatelessWidget {
-  const Diaries({
-    super.key,
-    required this.posts,
-  });
-
-  final List<Post> posts;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsets.only(top: 0, bottom: 100),
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: posts.length,
-      shrinkWrap: true,
-      separatorBuilder: (context, index) => const Gap(30),
-      itemBuilder: (context, index) =>
-          DiaryCard(post: posts[index], index: index),
-    );
-  }
-}
-
-class HeaderWidget extends ConsumerWidget {
-  const HeaderWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return isDarkMode(ref)
-        ? Container(
-            color: isDarkMode(ref)
-                ? Platform.isAndroid
-                    ? darkModeColor
-                    : const Color.fromARGB(255, 25, 25, 25)
-                : Colors.white,
-            child: Center(
-              child: CustomShader(
-                child: Text(
-                  "물들다",
-                  style: Theme.of(context)
-                      .textTheme
-                      .displayMedium!
-                      .copyWith(color: Colors.white70),
-                ),
-              ),
-            ),
-          )
-        : CustomAnimateGradient(
-            child: Center(
-              child: Text(
-                "물들다",
-                style: Theme.of(context)
-                    .textTheme
-                    .displayMedium!
-                    .copyWith(color: Colors.white70),
-              ),
-            ),
-          );
   }
 }
