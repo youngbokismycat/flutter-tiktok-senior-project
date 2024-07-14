@@ -10,6 +10,7 @@ import 'package:flutter_senior_project/core/config/wheather_config.dart';
 import 'package:flutter_senior_project/core/theme/text_theme.dart';
 import 'package:flutter_senior_project/features/diary/view/add_diary/widget/emoji_button.dart';
 import 'package:flutter_senior_project/features/common/widget/custom_animate_gradient.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddMyDiaryScreen extends HookConsumerWidget {
   const AddMyDiaryScreen({super.key});
@@ -145,6 +146,17 @@ class AddMyDiaryScreen extends HookConsumerWidget {
       );
 
       ref.read(addPostViewModelProvider.notifier).addPost(post);
+
+      // Save selections to SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      String emojiKey = 'emoji_${selectedEmojiIndex.value}';
+      String weatherKey = 'weather_${selectedWeatherIndex.value}';
+
+      int emojiCount = prefs.getInt(emojiKey) ?? 0;
+      int weatherCount = prefs.getInt(weatherKey) ?? 0;
+
+      await prefs.setInt(emojiKey, emojiCount + 1);
+      await prefs.setInt(weatherKey, weatherCount + 1);
 
       isButtonEnabled.value = false;
       FocusScope.of(context).unfocus();
