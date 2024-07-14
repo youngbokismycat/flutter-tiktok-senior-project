@@ -76,7 +76,22 @@ class ViewMyDiaryScreenState extends ConsumerState<ViewMyDiaryScreen> {
         headerWidget: const MainHeaderLogo(),
         body: [
           postsState.when(
-            data: (posts) => Diaries(posts: posts),
+            data: (posts) {
+              final opacity = useState(0.0);
+
+              useEffect(() {
+                Future.delayed(const Duration(milliseconds: 200), () {
+                  opacity.value = 1.0;
+                });
+                return null;
+              }, []);
+
+              return AnimatedOpacity(
+                opacity: opacity.value,
+                duration: const Duration(milliseconds: 300),
+                child: Diaries(posts: posts),
+              );
+            },
             loading: () => const SkeletonLoader(),
             error: (error, _) => Center(child: Text('Error: $error')),
           ),

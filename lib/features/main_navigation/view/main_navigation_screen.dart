@@ -16,6 +16,7 @@ class MainNavigation extends HookConsumerWidget {
     final List<Widget> screens = [
       const ViewMyDiaryScreen(),
       const AddMyDiaryScreen(),
+      const AnalysisMyDiaryScreen()
     ];
 
     return Scaffold(

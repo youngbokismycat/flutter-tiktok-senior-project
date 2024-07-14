@@ -67,6 +67,13 @@ class CrystalNavBar extends HookConsumerWidget {
                       icon: FontAwesomeIcons.penToSquare,
                       index: 1,
                     ),
+                    NavButton(
+                      notifier: notifier,
+                      selectedIndex: selectedIndex,
+                      opacityNotifier: opacityNotifier,
+                      icon: FontAwesomeIcons.chartSimple,
+                      index: 2,
+                    ),
                   ],
                 ),
               ),
