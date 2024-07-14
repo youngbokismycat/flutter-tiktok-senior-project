@@ -1,5 +1,6 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_senior_project/core/config/wheather_config.dart';
 import 'package:flutter_senior_project/features/common/widget/custom_animate_gradient.dart';
@@ -172,8 +173,29 @@ class AnalysisMyDiaryScreenState extends State<AnalysisMyDiaryScreen> {
           ? '0%'
           : '${((value / totalEmoji) * 100).toStringAsFixed(1)}%';
 
+      Color color;
+      switch (i) {
+        case 0:
+          color = FlexColor.pinkM3DarkPrimary; // Heart Eyes
+          break;
+        case 1:
+          color = FlexColor.orangeM3DarkPrimary; // Warm Smile
+          break;
+        case 2:
+          color = FlexColor.greenDarkPrimary; // Slightly Happy
+          break;
+        case 3:
+          color = FlexColor.aquaBlueDarkPrimary; // Sad
+          break;
+        case 4:
+          color = FlexColor.redLightPrimary; // Angry
+          break;
+        default:
+          color = Colors.grey; // Unknown
+      }
+
       return PieChartSectionData(
-        color: Colors.primaries[i % Colors.primaries.length],
+        color: color,
         value: value,
         title: title,
         radius: radius,

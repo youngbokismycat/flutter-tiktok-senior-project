@@ -37,11 +37,14 @@ class NavButton extends StatelessWidget {
           },
         );
       },
-      child: AnimatedOpacity(
-        duration: const Duration(milliseconds: 300),
-        opacity: selectedIndex == index ? 1 : 0.3,
-        child: FaIcon(
-          icon,
+      child: Container(
+        padding: const EdgeInsets.all(5),
+        child: AnimatedOpacity(
+          duration: const Duration(milliseconds: 300),
+          opacity: selectedIndex == index ? 1 : 0.3,
+          child: FaIcon(
+            icon,
+          ),
         ),
       ),
     );
