@@ -7,13 +7,10 @@ import 'package:flutter_senior_project/core/router/router.dart';
 import 'package:flutter_senior_project/core/theme/brand_theme.dart';
 import 'package:flutter_senior_project/features/common/utils/is_dark_mode.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:motion/motion.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  await Motion.instance.initialize();
   runApp(
     const ProviderScope(
       child: MyApp(),
