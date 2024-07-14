@@ -4,6 +4,7 @@ import 'package:draggable_home/draggable_home.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_senior_project/core/theme/text_theme.dart';
 import 'package:flutter_senior_project/features/diary/model/post_model.dart';
 import 'package:flutter_senior_project/features/diary/view/view_diary/widget/gear.dart';
 import 'package:flutter_senior_project/features/diary/view/view_diary/widget/main_header_logo.dart';
@@ -89,7 +90,20 @@ class ViewMyDiaryScreenState extends ConsumerState<ViewMyDiaryScreen> {
               return AnimatedOpacity(
                 opacity: opacity.value,
                 duration: const Duration(milliseconds: 300),
-                child: Diaries(posts: posts),
+                child: posts.isEmpty
+                    ? const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Gap(200),
+                          CustomShader(
+                            child: Text(
+                              "...일기가 없어요!",
+                              style: CustomTextTheme.whiteMedium,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Diaries(posts: posts),
               );
             },
             loading: () => const SkeletonLoader(),
