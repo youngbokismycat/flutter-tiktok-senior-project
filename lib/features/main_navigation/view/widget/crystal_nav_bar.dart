@@ -85,7 +85,8 @@ class CrystalNavBar extends HookConsumerWidget {
                       children: [
                         Showcase(
                           key: vm.keyOne,
-                          description: '일기를 한 눈에 볼 수 있는 곳이에요!',
+                          description: "일기를 클릭하면 전문을 볼 수 있어요!",
+                          title: '일기를 한 눈에 볼 수 있는 곳이에요!',
                           child: NavButton(
                             notifier: notifier,
                             selectedIndex: selectedIndex,
@@ -96,7 +97,8 @@ class CrystalNavBar extends HookConsumerWidget {
                         ),
                         Showcase(
                           key: vm.keyTwo,
-                          description: '일기를 쓸 수 있는 곳이에요!',
+                          description: "멋진 일기장을 만들 수 있어요!",
+                          title: '일기를 쓸 수 있는 곳이에요!',
                           child: NavButton(
                             notifier: notifier,
                             selectedIndex: selectedIndex,
@@ -107,7 +109,8 @@ class CrystalNavBar extends HookConsumerWidget {
                         ),
                         Showcase(
                           key: vm.keyThree,
-                          description: '일기의 통계를 확인할 수 있는 곳이에요!',
+                          title: "일기의 통계를 확인할 수 있는 곳이에요!",
+                          description: '일기를 많이 쓰다보면 해금될거에요!',
                           child: NavButton(
                             notifier: notifier,
                             selectedIndex: selectedIndex,
