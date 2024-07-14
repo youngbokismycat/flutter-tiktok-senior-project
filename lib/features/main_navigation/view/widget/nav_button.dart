@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class NavButton extends StatelessWidget {
   final int index;
   final IconData icon;
+  final bool isEnabled;
   const NavButton({
     super.key,
     required this.index,
@@ -13,6 +14,7 @@ class NavButton extends StatelessWidget {
     required this.notifier,
     required this.selectedIndex,
     required this.opacityNotifier,
+    this.isEnabled = true,
   });
 
   final BottomNavigationNotifier notifier;
@@ -22,21 +24,23 @@ class NavButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        opacityNotifier.state = 0.0;
-        Future.delayed(
-          const Duration(milliseconds: 300),
-          () {
-            notifier.setIndex(index);
-            Future.delayed(
-              const Duration(milliseconds: 100),
-              () {
-                opacityNotifier.state = 1.0;
-              },
-            );
-          },
-        );
-      },
+      onTap: isEnabled
+          ? () {
+              opacityNotifier.state = 0.0;
+              Future.delayed(
+                const Duration(milliseconds: 300),
+                () {
+                  notifier.setIndex(index);
+                  Future.delayed(
+                    const Duration(milliseconds: 100),
+                    () {
+                      opacityNotifier.state = 1.0;
+                    },
+                  );
+                },
+              );
+            }
+          : null,
       child: Container(
         padding: const EdgeInsets.all(5),
         child: AnimatedOpacity(
@@ -44,6 +48,7 @@ class NavButton extends StatelessWidget {
           opacity: selectedIndex == index ? 1 : 0.3,
           child: FaIcon(
             icon,
+            color: isEnabled ? null : Colors.grey, // Grey out if disabled
           ),
         ),
       ),
