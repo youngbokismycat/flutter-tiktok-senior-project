@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_senior_project/features/diary/view/add_diary/add_my_dairy_screen.dart';
 import 'package:flutter_senior_project/features/diary/view/analysis_diary/anaysis_my_dairy_screen.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_senior_project/features/main_navigation/view/widget/crys
 import 'package:flutter_senior_project/features/main_navigation/vm/bottom_nav_vm.dart';
 import 'package:flutter_senior_project/features/diary/view/view_diary/view_diary_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class MainNavigation extends HookConsumerWidget {
   const MainNavigation({super.key});
@@ -19,22 +22,30 @@ class MainNavigation extends HookConsumerWidget {
       const AnalysisMyDiaryScreen()
     ];
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          AnimatedOpacity(
-            opacity: opacity,
-            duration: const Duration(milliseconds: 300),
-            child: screens[selectedIndex],
-          ),
-          const Align(
-            alignment: Alignment.bottomCenter,
-            child: CrystalNavBar(),
-          ),
-        ],
+    return ShowCaseWidget(
+      builder: (context) => Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            AnimatedOpacity(
+              opacity: opacity,
+              duration: const Duration(milliseconds: 300),
+              child: screens[selectedIndex],
+            ),
+            const Align(
+              alignment: Alignment.bottomCenter,
+              child: CrystalNavBar(),
+            ),
+          ],
+        ),
+        extendBody: true,
       ),
-      extendBody: true,
+      onStart: (index, key) {
+        log('Showcase start: $index, $key');
+      },
+      onComplete: (index, key) {
+        log('Showcase complete: $index, $key');
+      },
     );
   }
 }

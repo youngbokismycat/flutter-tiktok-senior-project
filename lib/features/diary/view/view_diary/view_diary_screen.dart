@@ -5,6 +5,7 @@ import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_senior_project/core/theme/text_theme.dart';
+import 'package:flutter_senior_project/features/common/vm/showcase_vm.dart';
 import 'package:flutter_senior_project/features/diary/model/post_model.dart';
 import 'package:flutter_senior_project/features/diary/view/view_diary/widget/gear.dart';
 import 'package:flutter_senior_project/features/diary/view/view_diary/widget/main_header_logo.dart';
@@ -22,6 +23,7 @@ import 'package:flutter_senior_project/features/common/widget/custom_animate_gra
 import 'package:flutter_senior_project/features/common/widget/custom_shader.dart';
 import 'package:flutter_senior_project/features/diary/view/add_diary/add_my_dairy_screen.dart';
 import 'package:flutter_senior_project/features/diary/view/view_diary/widget/diary_card.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ViewMyDiaryScreen extends StatefulHookConsumerWidget {
@@ -52,6 +54,7 @@ class ViewMyDiaryScreenState extends ConsumerState<ViewMyDiaryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final vm = ref.watch(showcaseVMProvider);
     final opacity = useState(1.0);
     final postsState = ref.watch(fetchPostsViewModelProvider);
 
@@ -59,9 +62,29 @@ class ViewMyDiaryScreenState extends ConsumerState<ViewMyDiaryScreen> {
       duration: const Duration(milliseconds: 300),
       opacity: opacity.value,
       child: DraggableHome(
-        headerBottomBar: Gear(
-          ref: ref,
-          onTap: () => onGearsTap(context, opacity),
+        headerBottomBar: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            GestureDetector(
+              onTap: () {
+                ShowCaseWidget.of(context).startShowCase(
+                  [
+                    vm.keyOne,
+                    vm.keyTwo,
+                    vm.keyThree,
+                  ],
+                );
+              },
+              child: const FaIcon(
+                FontAwesomeIcons.solidCircleQuestion,
+                color: Colors.white,
+              ),
+            ),
+            Gear(
+              ref: ref,
+              onTap: () => onGearsTap(context, opacity),
+            ),
+          ],
         ),
         backgroundColor: isDarkMode(ref)
             ? const Color.fromARGB(255, 35, 35, 35)

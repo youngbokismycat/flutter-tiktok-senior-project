@@ -67,7 +67,7 @@ final routerProvider = Provider<GoRouter>(
           path: RouteNames.homeUrl,
           pageBuilder: (context, state) => transitionPage(
             state,
-            const MainNavigation(),
+            MainNavigation(),
           ),
         ),
         GoRoute(
