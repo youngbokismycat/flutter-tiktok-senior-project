@@ -31,14 +31,26 @@ class AnalysisMyDiaryScreenState extends State<AnalysisMyDiaryScreen> {
     Map<String, int> tempEmojiStats = {};
     Map<String, int> tempWeatherStats = {};
 
-    for (int i = 0; i < 5; i++) {
-      String emojiKey = 'emoji_$i';
+    List<String> emojiKeys = [
+      'emoji_0',
+      'emoji_1',
+      'emoji_2',
+      'emoji_3',
+      'emoji_4'
+    ];
+    List<String> weatherKeys = [
+      'weather_0',
+      'weather_1',
+      'weather_2',
+      'weather_3'
+    ];
+
+    for (String emojiKey in emojiKeys) {
       int emojiCount = prefs.getInt(emojiKey) ?? 0;
       tempEmojiStats[emojiKey] = emojiCount;
     }
 
-    for (int i = 0; i < 4; i++) {
-      String weatherKey = 'weather_$i';
+    for (String weatherKey in weatherKeys) {
       int weatherCount = prefs.getInt(weatherKey) ?? 0;
       tempWeatherStats[weatherKey] = weatherCount;
     }

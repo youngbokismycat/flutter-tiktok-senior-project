@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_senior_project/core/config/wheather_config.dart';
 import 'package:flutter_senior_project/core/router/route_names.dart';
@@ -53,6 +54,25 @@ class DiaryCard extends HookConsumerWidget {
     if (confirmDelete ?? false) {
       final postRepository = ref.read(postRepositoryProvider);
       await postRepository.deletePost(post.id!);
+
+      // Reduce count in SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+
+      // Update emoji count
+      String emojiKey = 'emoji_${getEmojiIndex(post.selectedEmoji)}';
+      int emojiCount = prefs.getInt(emojiKey) ?? 0;
+      if (emojiCount > 0) {
+        await prefs.setInt(emojiKey, emojiCount - 1);
+      }
+
+      // Update weather count
+      String weatherKey = 'weather_${getWeatherIndex(post.selectedWeather)}';
+      int weatherCount = prefs.getInt(weatherKey) ?? 0;
+      if (weatherCount > 0) {
+        await prefs.setInt(weatherKey, weatherCount - 1);
+      }
+
+      // Refresh the post list
       ref.read(fetchPostsViewModelProvider.notifier).fetchPosts();
     }
   }
@@ -65,7 +85,7 @@ class DiaryCard extends HookConsumerWidget {
 
     return GestureDetector(
       onTap: () => _onCardTap(context),
-      onLongPress: () => _onDeletePost(context, ref), // Add this line
+      onLongPress: () => _onDeletePost(context, ref),
       onTapDown: (_) => scale.value = 0.95,
       onTapUp: (_) => scale.value = 1.0,
       onTapCancel: () => scale.value = 1.0,
@@ -155,6 +175,23 @@ class DiaryCard extends HookConsumerWidget {
     }
   }
 
+  int getEmojiIndex(String emojiLabel) {
+    switch (emojiLabel) {
+      case 'Heart Eyes':
+        return 0;
+      case 'Warm Smile':
+        return 1;
+      case 'Slightly Happy':
+        return 2;
+      case 'Sad':
+        return 3;
+      case 'Angry':
+        return 4;
+      default:
+        return 0;
+    }
+  }
+
   Widget getWeatherWidget(String weatherLabel) {
     switch (weatherLabel) {
       case 'WeatherConfiguration.sunnyMorning':
@@ -167,6 +204,21 @@ class DiaryCard extends HookConsumerWidget {
         return WeatherConfiguration.rainyEvening;
       default:
         return WeatherConfiguration.sunnyMorning;
+    }
+  }
+
+  int getWeatherIndex(String weatherLabel) {
+    switch (weatherLabel) {
+      case 'WeatherConfiguration.sunnyMorning':
+        return 0;
+      case 'WeatherConfiguration.sunnyEvening':
+        return 1;
+      case 'WeatherConfiguration.rainyMorning':
+        return 2;
+      case 'WeatherConfiguration.rainyEvening':
+        return 3;
+      default:
+        return 0;
     }
   }
 }
