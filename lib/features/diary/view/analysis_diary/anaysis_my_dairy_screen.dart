@@ -76,86 +76,48 @@ class AnalysisMyDiaryScreenState extends State<AnalysisMyDiaryScreen> {
           ? '0%'
           : '${((value / totalWeather) * 100).toStringAsFixed(1)}%';
 
+      Color color;
+      Widget child;
       switch (i) {
         case 0:
-          return PieChartSectionData(
-            color: const Color(0xFF2b53b2),
-            value: value,
-            title: title,
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xffffffff),
-              shadows: shadows,
-            ),
-            badgeWidget: _Badge(
-              size: widgetSize * 1.1,
-              borderColor: Colors.black,
-              child: WeatherConfiguration.sunnyMorning,
-            ),
-            badgePositionPercentageOffset: .98,
-          );
+          color = const Color(0xFF2b53b2);
+          child = WeatherConfiguration.sunnyMorning;
+          break;
         case 1:
-          return PieChartSectionData(
-            color: const Color(0xFFed7355),
-            value: value,
-            title: title,
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xffffffff),
-              shadows: shadows,
-            ),
-            badgeWidget: _Badge(
-              size: widgetSize * 1.1,
-              borderColor: Colors.black,
-              child: WeatherConfiguration.sunnyEvening,
-            ),
-            badgePositionPercentageOffset: .98,
-          );
+          color = const Color(0xFFed7355);
+          child = WeatherConfiguration.sunnyEvening;
+          break;
         case 2:
-          return PieChartSectionData(
-            color: const Color(0xFFc1ccd2),
-            value: value,
-            title: title,
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xffffffff),
-              shadows: shadows,
-            ),
-            badgeWidget: _Badge(
-              size: widgetSize * 1.1,
-              borderColor: Colors.black,
-              child: WeatherConfiguration.rainyMorning,
-            ),
-            badgePositionPercentageOffset: .98,
-          );
+          color = const Color(0xFFc1ccd2);
+          child = WeatherConfiguration.rainyMorning;
+          break;
         case 3:
-          return PieChartSectionData(
-            color: const Color(0xFF4e6571),
-            value: value,
-            title: title,
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xffffffff),
-              shadows: shadows,
-            ),
-            badgeWidget: _Badge(
-              size: widgetSize * 1.1,
-              borderColor: Colors.black,
-              child: WeatherConfiguration.rainyEvening,
-            ),
-            badgePositionPercentageOffset: .98,
-          );
+          color = const Color(0xFF4e6571);
+          child = WeatherConfiguration.rainyEvening;
+          break;
         default:
           throw Exception('Oh no');
       }
+
+      return PieChartSectionData(
+        color: color,
+        value: value,
+        title: title,
+        radius: radius,
+        titleStyle: TextStyle(
+          fontSize: fontSize,
+          fontWeight: FontWeight.bold,
+          color: const Color(0xffffffff),
+          shadows: shadows,
+        ),
+        badgeWidget: _Badge(
+          size: widgetSize * 1.1,
+          borderColor: Colors.black,
+          backgroundColor: color, // Set background color here
+          child: child,
+        ),
+        badgePositionPercentageOffset: .98,
+      );
     });
   }
 
@@ -208,6 +170,7 @@ class AnalysisMyDiaryScreenState extends State<AnalysisMyDiaryScreen> {
         badgeWidget: _Badge(
           size: widgetSize * 1.1,
           borderColor: Colors.black,
+          backgroundColor: color, // Set background color here
           child: _getEmoji(i),
         ),
         badgePositionPercentageOffset: .98,
@@ -333,11 +296,13 @@ class _Badge extends StatelessWidget {
   const _Badge({
     required this.size,
     required this.borderColor,
+    required this.backgroundColor, // Add backgroundColor parameter
     required this.child,
   });
 
   final double size;
   final Color borderColor;
+  final Color backgroundColor; // Add backgroundColor field
   final Widget child;
 
   @override
@@ -348,7 +313,7 @@ class _Badge extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: backgroundColor, // Use backgroundColor here
         shape: BoxShape.circle,
         boxShadow: <BoxShadow>[
           BoxShadow(

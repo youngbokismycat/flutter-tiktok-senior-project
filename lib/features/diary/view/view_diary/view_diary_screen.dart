@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:draggable_home/draggable_home.dart';
-import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_senior_project/core/theme/text_theme.dart';
