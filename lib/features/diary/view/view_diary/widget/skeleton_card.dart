@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_senior_project/features/common/utils/is_dark_mode.dart';
 import 'package:gap/gap.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class SkeletonLoaderCard extends StatelessWidget {
+class SkeletonLoaderCard extends ConsumerWidget {
   const SkeletonLoaderCard({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 15,
       ),
       child: Skeleton.leaf(
+        enabled: true,
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(
               24,
             ),
-            color: Colors.grey.shade300,
+            color: isDarkMode(ref) ? Colors.black : Colors.grey.shade300,
           ),
           height: 110,
           child: const Row(),
