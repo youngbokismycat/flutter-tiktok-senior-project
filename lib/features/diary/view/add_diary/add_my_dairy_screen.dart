@@ -38,9 +38,6 @@ class AddMyDiaryScreen extends HookConsumerWidget {
         useTextEditingController();
 
     final isButtonEnabled = useState(false);
-    final isStatisticsVisible = useState(false);
-    final statisticsOpacity =
-        useAnimationController(duration: const Duration(seconds: 1));
 
     useEffect(() {
       animationController.forward();
@@ -71,28 +68,6 @@ class AddMyDiaryScreen extends HookConsumerWidget {
         diaryEntryController.removeListener(listener);
       };
     }, [titleController, subtitleController, diaryEntryController]);
-
-    Future<void> checkUnlockConditions() async {
-      final prefs = await SharedPreferences.getInstance();
-      int seasonCount = 0;
-      for (int i = 0; i < 4; i++) {
-        if ((prefs.getInt('weather_$i') ?? 0) > 0) {
-          seasonCount++;
-        }
-      }
-
-      int emojiCount = 0;
-      for (int i = 0; i < 5; i++) {
-        if ((prefs.getInt('emoji_$i') ?? 0) > 0) {
-          emojiCount++;
-        }
-      }
-
-      if (seasonCount >= 4 && emojiCount >= 5) {
-        isStatisticsVisible.value = true;
-        statisticsOpacity.forward();
-      }
-    }
 
     void onMoodTap(int index) async {
       selectedEmojiIndex.value = index;
@@ -182,9 +157,6 @@ class AddMyDiaryScreen extends HookConsumerWidget {
 
       await prefs.setInt(emojiKey, emojiCount + 1);
       await prefs.setInt(weatherKey, weatherCount + 1);
-
-      // Check unlock conditions after submitting
-      checkUnlockConditions();
 
       isButtonEnabled.value = false;
       FocusScope.of(context).unfocus();
@@ -279,21 +251,6 @@ class AddMyDiaryScreen extends HookConsumerWidget {
                         ],
                       );
                     }),
-                  ),
-                  AnimatedOpacity(
-                    duration: const Duration(seconds: 1),
-                    opacity: isStatisticsVisible.value ? 1.0 : 0.0,
-                    child: const Positioned(
-                      bottom: 50,
-                      child: Text(
-                        'Statistics Unlocked!',
-                        style: TextStyle(
-                          fontSize: 24,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
                   ),
                 ],
               );

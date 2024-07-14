@@ -176,19 +176,19 @@ class AnalysisMyDiaryScreenState extends State<AnalysisMyDiaryScreen> {
       Color color;
       switch (i) {
         case 0:
-          color = FlexColor.pinkM3DarkPrimary; // Heart Eyes
+          color = Colors.pink; // Heart Eyes
           break;
         case 1:
-          color = FlexColor.orangeM3DarkPrimary; // Warm Smile
+          color = Colors.orange; // Warm Smile
           break;
         case 2:
-          color = FlexColor.greenDarkPrimary; // Slightly Happy
+          color = Colors.yellow; // Slightly Happy
           break;
         case 3:
-          color = FlexColor.aquaBlueDarkPrimary; // Sad
+          color = Colors.blue; // Sad
           break;
         case 4:
-          color = FlexColor.redLightPrimary; // Angry
+          color = Colors.red; // Angry
           break;
         default:
           color = Colors.grey; // Unknown
